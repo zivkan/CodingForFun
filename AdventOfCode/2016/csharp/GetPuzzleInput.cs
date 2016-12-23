@@ -8,5 +8,10 @@ namespace csharp
         {
             return new StreamReader($@"..\..\..\input\Day{day}.txt");
         }
+
+        internal static string DayText(int day)
+        {
+            return File.ReadAllText($@"..\..\..\input\Day{day}.txt");
+        }
     }
 }
