@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace csharp
 {
-    public class Day2
+    public class Day02
     {
         private const string Keypad1Layout = "123\n" +
                                             "456\n" +
@@ -31,7 +31,7 @@ namespace csharp
 
         private readonly ITestOutputHelper _output;
 
-        public Day2(ITestOutputHelper output)
+        public Day02(ITestOutputHelper output)
         {
             _output = output;
         }

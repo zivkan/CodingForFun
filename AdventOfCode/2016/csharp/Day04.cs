@@ -8,13 +8,13 @@ using Xunit.Abstractions;
 
 namespace csharp
 {
-    public class Day4
+    public class Day04
     {
         private readonly ITestOutputHelper _output;
 
         private static readonly Regex Regex = new Regex(@"^([a-z-]+)\-(\d+)\[([a-z]+)\]$");
 
-        public Day4(ITestOutputHelper output)
+        public Day04(ITestOutputHelper output)
         {
             _output = output;
         }

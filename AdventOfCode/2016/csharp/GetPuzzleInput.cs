@@ -6,12 +6,12 @@ namespace csharp
     {
         internal static TextReader Day(int day)
         {
-            return new StreamReader($@"..\..\..\input\Day{day}.txt");
+            return new StreamReader($@"..\..\..\input\Day{day:d2}.txt");
         }
 
         internal static string DayText(int day)
         {
-            return File.ReadAllText($@"..\..\..\input\Day{day}.txt");
+            return File.ReadAllText($@"..\..\..\input\Day{day:d2}.txt");
         }
     }
 }

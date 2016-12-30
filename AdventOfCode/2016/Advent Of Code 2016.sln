@@ -7,15 +7,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharp", "csharp\csharp.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "input", "input", "{20175434-B585-4CBC-867F-2B37853F3A53}"
 	ProjectSection(SolutionItems) = preProject
-		input\Day1.txt = input\Day1.txt
-		input\Day2.txt = input\Day2.txt
-		input\Day3.txt = input\Day3.txt
-		input\Day4.txt = input\Day4.txt
-		input\Day5.txt = input\Day5.txt
-		input\Day6.txt = input\Day6.txt
-		input\Day7.txt = input\Day7.txt
-		input\Day8.txt = input\Day8.txt
-		input\Day9.txt = input\Day9.txt
+		input\Day01.txt = input\Day01.txt
+		input\Day02.txt = input\Day02.txt
+		input\Day03.txt = input\Day03.txt
+		input\Day04.txt = input\Day04.txt
+		input\Day05.txt = input\Day05.txt
+		input\Day06.txt = input\Day06.txt
+		input\Day07.txt = input\Day07.txt
+		input\Day08.txt = input\Day08.txt
+		input\Day09.txt = input\Day09.txt
+		input\Day10.txt = input\Day10.txt
 	EndProjectSection
 EndProject
 Global

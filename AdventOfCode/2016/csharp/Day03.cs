@@ -7,13 +7,13 @@ using Xunit.Abstractions;
 
 namespace csharp
 {
-    public class Day3
+    public class Day03
     {
         private static readonly char[] Separator = {' '};
 
         private readonly ITestOutputHelper _output;
 
-        public Day3(ITestOutputHelper output)
+        public Day03(ITestOutputHelper output)
         {
             _output = output;
         }

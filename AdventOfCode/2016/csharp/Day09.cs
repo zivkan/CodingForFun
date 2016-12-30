@@ -5,11 +5,11 @@ using Xunit.Abstractions;
 
 namespace csharp
 {
-    public class Day9
+    public class Day09
     {
         private readonly ITestOutputHelper _output;
 
-        public Day9(ITestOutputHelper output)
+        public Day09(ITestOutputHelper output)
         {
             _output = output;
         }

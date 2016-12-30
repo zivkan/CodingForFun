@@ -6,13 +6,13 @@ using Xunit.Abstractions;
 
 namespace csharp
 {
-    public class Day6
+    public class Day06
     {
         private readonly ITestOutputHelper _output;
 
         private const string SampleInput = "eedadn\ndrvtee\neandsr\nraavrd\natevrs\ntsrnev\nsdttsa\nrasrtv\nnssdts\nntnada\nsvetve\ntesnvt\nvntsnd\nvrdear\ndvrsen\nenarar";
 
-        public Day6(ITestOutputHelper output)
+        public Day06(ITestOutputHelper output)
         {
             _output = output;
         }

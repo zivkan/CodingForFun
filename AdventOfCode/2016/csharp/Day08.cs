@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace csharp
 {
-    public class Day8
+    public class Day08
     {
         private readonly ITestOutputHelper _output;
 
@@ -15,7 +15,7 @@ namespace csharp
         private static readonly Regex RotateColumnRegex = new Regex("^rotate column x=([\\d]+) by ([\\d]+)$");
         private static readonly Regex RotateRowRegex = new Regex("^rotate row y=([\\d]+) by ([\\d]+)$");
 
-        public Day8(ITestOutputHelper output)
+        public Day08(ITestOutputHelper output)
         {
             _output = output;
         }
