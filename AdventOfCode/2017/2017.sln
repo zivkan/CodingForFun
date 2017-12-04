@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "input", "input", "{EB80DCB3
 		input\Day01.txt = input\Day01.txt
 		input\Day02.txt = input\Day02.txt
 		input\Day03.txt = input\Day03.txt
+		input\Day04.txt = input\Day04.txt
 	EndProjectSection
 EndProject
 Global
