@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using input;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -8,10 +9,12 @@ namespace csharp
     public class Day02
     {
         private ITestOutputHelper _output;
+        private string _input;
 
         public Day02(ITestOutputHelper output)
         {
             _output = output;
+            _input = GetInput.Day(2);
         }
 
         [Fact]
@@ -25,8 +28,7 @@ namespace csharp
         [Fact]
         public void Part1()
         {
-            string input = GetPuzzleInput.DayText(2);
-            int checksum = CalcPart1(input);
+            int checksum = CalcPart1(_input);
             _output.WriteLine("Checksum = {0}", checksum);
         }
 
@@ -41,8 +43,7 @@ namespace csharp
         [Fact]
         public void Part2()
         {
-            string input = GetPuzzleInput.DayText(2);
-            int checksum = CalcPart2(input);
+            int checksum = CalcPart2(_input);
             _output.WriteLine("Checksum = {0}", checksum);
         }
 

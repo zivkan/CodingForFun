@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using input;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +22,7 @@ c inc -20 if c == 10";
         public Day08(ITestOutputHelper output)
         {
             _output = output;
-            _input = GetPuzzleInput.DayText(8);
+            _input = GetInput.Day(8);
         }
 
         [Fact]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using input;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,7 +15,7 @@ namespace csharp
         public Day06(ITestOutputHelper output)
         {
             _output = output;
-            _input = GetPuzzleInput.DayText(6);
+            _input = GetInput.Day(6);
         }
 
         [Fact]
@@ -31,8 +32,13 @@ namespace csharp
         public void Part1()
         {
             var (cycles, looplength, banks) = IterateUntilRepeat(_input);
-            Assert.Equal(5042, cycles);
-            Assert.Equal(1, looplength);
+            _output.WriteLine("Cycles = {0}", cycles);
+        }
+
+        [Fact] void Part2()
+        {
+            var (cycles, looplength, banks) = IterateUntilRepeat(_input);
+            _output.WriteLine("Loop length = {0}", looplength);
         }
 
         private (int cycles, int loopLength, int[] banks) IterateUntilRepeat(string input)

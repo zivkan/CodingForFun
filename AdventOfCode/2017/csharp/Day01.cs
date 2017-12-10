@@ -1,4 +1,5 @@
 using System;
+using input;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -7,10 +8,12 @@ namespace csharp
     public class Day01
     {
         private ITestOutputHelper _output;
+        private string _input;
 
         public Day01(ITestOutputHelper output)
         {
             _output = output;
+            _input = GetInput.Day(1);
         }
 
         [Theory]
@@ -28,8 +31,7 @@ namespace csharp
         [Fact]
         public void Part1()
         {
-            string input = GetPuzzleInput.DayText(1);
-            int result = SolveCaptcha(input, Next);
+            int result = SolveCaptcha(_input, Next);
             _output.WriteLine("{0}", result);
         }
 
@@ -49,8 +51,7 @@ namespace csharp
         [Fact]
         public void Part2()
         {
-            string input = GetPuzzleInput.DayText(1);
-            int result = SolveCaptcha(input, Opposite);
+            int result = SolveCaptcha(_input, Opposite);
             _output.WriteLine("{0}", result);
         }
 

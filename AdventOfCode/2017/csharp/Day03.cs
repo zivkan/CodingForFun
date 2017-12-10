@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using input;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -10,10 +11,12 @@ namespace csharp
     public class Day03
     {
         private ITestOutputHelper _output;
+        private string _input;
 
         public Day03(ITestOutputHelper output)
         {
             _output = output;
+            _input = GetInput.Day(3);
         }
 
         [Theory]
@@ -30,16 +33,14 @@ namespace csharp
         [Fact]
         public void Part1()
         {
-            string input = GetPuzzleInput.DayText(3);
-            int distance = ManhattanDistance(input);
+            int distance = ManhattanDistance(_input);
             _output.WriteLine("distance = {0}", distance);
         }
 
         [Fact]
         public void Part2()
         {
-            string input = GetPuzzleInput.DayText(3);
-            int minValue = int.Parse(input);
+            int minValue = int.Parse(_input);
             Dictionary<Location, int> memory = new Dictionary<Location, int>();
 
             var enumerator = new LocationEnumerator();

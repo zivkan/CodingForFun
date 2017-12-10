@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using input;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,7 +15,7 @@ namespace csharp
         public Day04(ITestOutputHelper output)
         {
             _output = output;
-            _input = GetPuzzleInput.DayText(4);
+            _input = GetInput.Day(4);
         }
 
         [Theory]
