@@ -54,10 +54,10 @@ namespace csharp
             _output.WriteLine("Knot hash = " + hash);
         }
 
-        private string KnotHash(string input)
+        public static byte[] KnotHashBytes(string input)
         {
             List<int> instructions = new List<int>(input.Length + 5);
-            for (int i =0; i < input.Length; i++)
+            for (int i = 0; i < input.Length; i++)
             {
                 instructions.Add(input[i]);
             }
@@ -69,10 +69,16 @@ namespace csharp
 
             var sparseHash = RunRounds(256, instructions, 64);
             var denseHash = GetDenseHash(sparseHash);
+            return denseHash;
+        }
+
+        public static string KnotHash(string input)
+        {
+            var denseHash = KnotHashBytes(input);
             return ToHex(denseHash);
         }
 
-        private string ToHex(byte[] denseHash)
+        private static string ToHex(byte[] denseHash)
         {
             char[] str = new char[denseHash.Length * 2];
             for (int i = 0; i < denseHash.Length; i++)
@@ -95,7 +101,7 @@ namespace csharp
             return new string(str);
         }
 
-        private byte[] GetDenseHash(byte[] sparseHash)
+        private static byte[] GetDenseHash(byte[] sparseHash)
         {
             var result = new byte[sparseHash.Length / 16];
 
@@ -118,7 +124,7 @@ namespace csharp
             return RunRounds(size, instructions, 1);
 
         }
-        private byte[] RunRounds(int size, List<int> input, int rounds)
+        private static byte[] RunRounds(int size, List<int> input, int rounds)
         {
             byte[] list = new byte[size];
             for (int i = 0; i < size; i++)
