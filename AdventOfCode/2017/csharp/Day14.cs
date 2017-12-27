@@ -87,13 +87,12 @@ namespace csharp
                 for (var i = 0; i < bytes.Length; i++)
                 {
                     byte copy = bytes[i];
-                    for (int bit = 0; bit < 8; bit++, column++)
+                    for (byte bit = 0x80; bit > 0; bit = (byte)(bit >> 1), column++)
                     {
-                        if ((copy & 1) == 1)
+                        if ((copy & bit) != 0)
                         {
-                            used.Add(new Position { X = row, Y = column });
+                            used.Add(new Position { X = column, Y = row });
                         }
-                        copy = (byte)(copy >> 1);
                     }
                 }
             }
