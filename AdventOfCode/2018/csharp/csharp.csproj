@@ -5,6 +5,7 @@
 
     <IsPackable>false</IsPackable>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
