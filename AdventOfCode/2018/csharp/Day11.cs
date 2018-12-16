@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using System.Diagnostics;
 using input;
 using Xunit;
 using Xunit.Abstractions;
@@ -27,11 +27,12 @@ namespace csharp
         }
 
         [Theory]
-        [InlineData(18, "33,45")]
-        [InlineData(42, "21,61")]
-        public void Part1Sample(int serial, string expected)
+        [InlineData(18, "33,45", 29)]
+        [InlineData(42, "21,61", 30)]
+        public void Part1Sample(int serial, string expected, int expectedPower)
         {
-            var result = FindHighest3x3PowerRegion(serial);
+            var (result, power) = FindHighest3x3PowerRegion(serial);
+            Assert.Equal(expectedPower, power);
             Assert.Equal(expected, result);
         }
 
@@ -39,16 +40,18 @@ namespace csharp
         public void Part1()
         {
             var serial = int.Parse(_input);
-            var result = FindHighest3x3PowerRegion(serial);
-            _output.WriteLine("{0}", result);
+            var (result, power) = FindHighest3x3PowerRegion(serial);
+            Assert.Equal("20,54", result);
+            Assert.Equal(30, power);
         }
 
         [Theory]
-        [InlineData(18, "90,269,16")]
-        [InlineData(42, "232,251,12")]
-        public void Part2Sample(int serial, string expected)
+        [InlineData(18, "90,269,16", 113)]
+        [InlineData(42, "232,251,12", 119)]
+        public void Part2Sample(int serial, string expected, int expectedPower)
         {
-            var result = FindHighestPowerRegion(serial);
+            var (result, power) = FindHighestPowerRegion(serial);
+            Assert.Equal(expectedPower, power);
             Assert.Equal(expected, result);
         }
 
@@ -56,50 +59,43 @@ namespace csharp
         public void Part2()
         {
             var serial = int.Parse(_input);
-            var result = FindHighestPowerRegion(serial);
-            _output.WriteLine("{0}", result);
+            var (result, power) = FindHighestPowerRegion(serial);
+            Assert.Equal("233,93,13", result);
+            Assert.Equal(141, power);
         }
 
-        private string FindHighest3x3PowerRegion(int serial)
+        private (string, int) FindHighest3x3PowerRegion(int serial)
         {
             var powerGrid = GeneratePowerGrid(serial);
-            var summedSquares = GetSummedSquares(powerGrid, 3);
-            var highest = FindHighestPowerRegion(summedSquares);
-            return $"{highest.x+1},{highest.y+1}";
+            var summedSquares = (int[,])powerGrid.Clone();
+            UpdateSummedSquares(powerGrid, 2, summedSquares);
+            UpdateSummedSquares(powerGrid, 3, summedSquares);
+            var highest = FindHighestPowerRegion(summedSquares, 3);
+            return ($"{highest.x+1},{highest.y+1}", highest.power);
         }
 
-        private string FindHighestPowerRegion(int serial)
+        private (string, int) FindHighestPowerRegion(int serial)
         {
             var powerGrid = GeneratePowerGrid(serial);
-            int maxPower = int.MinValue;
-            int maxSize = -1;
-            int maxX = -1;
-            int maxY = -1;
+            var summedSquares = (int[,])powerGrid.Clone();
 
-            var results = new (int size, int power, int x, int y)[300];
-            var tmp = GetSummedSquares(powerGrid, 16);
-            var asdfsdf = FindHighestPowerRegion(tmp);
+            int maxSize = 1;
+            var (maxX, maxY, maxPower) = FindHighestPowerRegion(summedSquares, 1);
 
-            Parallel.For(1, 301, size =>
-                {
-                    var summedSquares = GetSummedSquares(powerGrid, size);
-                    var highest = FindHighestPowerRegion(summedSquares);
-                    results[size - 1] = (size, highest.power, highest.x, highest.y);
-                });
-
-
-            foreach (var result in results)
+            for (var size = 2; size <= 300; size++)
             {
-                if (result.power > maxPower)
+                UpdateSummedSquares(powerGrid, size, summedSquares);
+                var current = FindHighestPowerRegion(summedSquares, size);
+                if (current.power > maxPower)
                 {
-                    maxPower = result.power;
-                    maxSize = result.size;
-                    maxX = result.x;
-                    maxY = result.y;
+                    maxPower = current.power;
+                    maxX = current.x;
+                    maxY = current.y;
+                    maxSize = size;
                 }
             }
 
-            return $"{maxX + 1},{maxY + 1},{maxSize}";
+            return ($"{maxX + 1},{maxY + 1},{maxSize}", maxPower);
         }
 
         private int[,] GeneratePowerGrid(int serial)
@@ -128,39 +124,45 @@ namespace csharp
             return powerLevel;
         }
 
-        private int[,] GetSummedSquares(int[,] powerGrid, int size)
+        private void UpdateSummedSquares(int[,] powerGrid, int size, int[,] summedSquares)
         {
             var width = powerGrid.GetLength(0) - size + 1;
             var height = powerGrid.GetLength(1) - size + 1;
-
-            var squares = new int[width, height];
 
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    int sum = 0;
-                    for (var dy = 0; dy < size; dy++)
+                    int sum = summedSquares[x,y];
+                    for (var i = 0; i < size - 1; i++)
                     {
-                        for (var dx = 0; dx < size; dx++)
-                        {
-                            sum += powerGrid[x + dx, y + dy];
-                        }
+                        sum = sum +
+                           powerGrid[x + size - 1, y + i] +
+                           powerGrid[x + i, y + size - 1];
                     }
-                    squares[x, y] = sum;
+                    sum = sum + powerGrid[x + size - 1, y + size - 1];
+                    summedSquares[x, y] = sum;
                 }
             }
 
-            return squares;
+#if DEBUG
+            Debug.Assert(width == height);
+            for (int i = 0; i < width; i++)
+            {
+                summedSquares[i, width] = int.MaxValue;
+                summedSquares[width, i] = int.MaxValue;
+            }
+            summedSquares[width, width] = int.MaxValue;
+#endif
         }
 
-        private (int x, int y, int power) FindHighestPowerRegion(int[,] summedSquares)
+        private (int x, int y, int power) FindHighestPowerRegion(int[,] summedSquares, int size)
         {
             int maxValue = int.MinValue;
             int maxX = -1;
             int maxY = -1;
-            int width = summedSquares.GetLength(0);
-            int height = summedSquares.GetLength(1);
+            int width = summedSquares.GetLength(0) - size + 1;
+            int height = summedSquares.GetLength(1) - size + 1;
 
             for (int y = 0; y < height; y++)
             {
