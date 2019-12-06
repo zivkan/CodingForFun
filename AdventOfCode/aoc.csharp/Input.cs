@@ -28,6 +28,18 @@ namespace aoc.csharp
             }
         }
 
+        internal static string[] GetLines(TextReader input)
+        {
+            var lines = new List<string>();
+            string? line;
+            while ((line = input.ReadLine()) != null)
+            {
+                lines.Add(line);
+            }
+
+            return lines.ToArray();
+        }
+
         private static object ToIntList(TextReader reader)
         {
             var list = new List<int>();
