@@ -1,4 +1,5 @@
 ﻿using aoc.csharp._2019;
+using System.Collections.Generic;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -33,7 +34,7 @@ namespace aoc.csharp.tests._2019
         [InlineData(new[] { 1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50 }, new[] { 3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50 })]
         public void RunProgram(int[] memory, int[] expected)
         {
-            Day02.RunProgram(memory);
+            IntcodeVm.RunProgram(memory, new Queue<int>());
             Assert.Equal(expected, memory);
         }
     }

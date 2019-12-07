@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace aoc.csharp._2019
@@ -17,7 +18,7 @@ namespace aoc.csharp._2019
             var part1 = (int[])list.Clone();
             part1[1] = 12;
             part1[2] = 2;
-            RunProgram(part1);
+            IntcodeVm.RunProgram(part1, new Queue<int>());
 
             var part2 = new int[list.Length];
             for (int verb = 0; verb < 100; verb++)
@@ -27,7 +28,7 @@ namespace aoc.csharp._2019
                     Array.Copy(list, part2, list.Length);
                     part2[1] = noun;
                     part2[2] = verb;
-                    RunProgram(part2);
+                    IntcodeVm.RunProgram(part2, new Queue<int>());
 
                     if (part2[0] == 19690720)
                     {
@@ -37,50 +38,6 @@ namespace aoc.csharp._2019
             }
 
             throw new Exception("Couldn't find part2 answer");
-        }
-
-        public static void RunProgram(int[] memory)
-        {
-            int ip = 0; //instruction pointer
-
-            while (true)
-            {
-                var opcode = memory[ip];
-                var instruction_length = 0;
-                switch (opcode)
-                {
-                    case 1:
-                        {
-                            instruction_length = 4;
-                            var addr1 = memory[ip + 1];
-                            var addr2 = memory[ip + 2];
-                            var addr3 = memory[ip + 3];
-                            var val1 = memory[addr1];
-                            var val2 = memory[addr2];
-                            memory[addr3] = val1 + val2;
-                        }
-                        break;
-
-                    case 2:
-                        {
-                            instruction_length = 4;
-                            var addr1 = memory[ip + 1];
-                            var addr2 = memory[ip + 2];
-                            var addr3 = memory[ip + 3];
-                            var val1 = memory[addr1];
-                            var val2 = memory[addr2];
-                            memory[addr3] = val1 * val2;
-                        }
-                        break;
-
-                    case 99:
-                        return;
-
-                    default:
-                        throw new NotSupportedException($"Opcode {opcode} unknown");
-                }
-                ip += instruction_length;
-            }
         }
     }
 }

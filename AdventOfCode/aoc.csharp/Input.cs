@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace aoc.csharp
 {
@@ -43,39 +44,33 @@ namespace aoc.csharp
         private static object ToIntList(TextReader reader)
         {
             var list = new List<int>();
-
-            int value = 0;
-            bool inValue = false;
+            var sb = new StringBuilder();
 
             int read;
             while ((read = reader.Read()) >= 0)
             {
                 char c = (char)read;
-                if (c >= '0' && c <= '9')
+                if ((c >= '0' && c <= '9') || c == '-')
                 {
-                    if (inValue)
-                    {
-                        value = value * 10 + (c - '0');
-                    }
-                    else
-                    {
-                        value = c - '0';
-                        inValue = true;
-                    }
+                    sb.Append(c);
                 }
                 else if (c == ',' || c == ' ' || c == '\n' || c == '\r')
                 {
-                    if (inValue)
+                    if (sb.Length > 0)
                     {
-                        list.Add(value);
-                        inValue = false;
+                        list.Add(int.Parse(sb.ToString()));
+                        sb.Clear();
                     }
+                }
+                else
+                {
+                    throw new Exception("Unexpected character");
                 }
             }
 
-            if (inValue)
+            if (sb.Length > 0)
             {
-                list.Add(value);
+                list.Add(int.Parse(sb.ToString()));
             }
 
             return list;
