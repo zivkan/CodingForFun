@@ -8,13 +8,11 @@ namespace aoc.csharp.tests._2019
         [Fact]
         public void Answer()
         {
-            using (var input = Input.Get(2019, 04))
-            {
-                var result = Day04.GetAnswer(input);
+            using var input = Input.Get(2019, 04);
+            var (part1, part2) = Day04.GetAnswer(input);
 
-                Assert.Equal("2814", result.Part1);
-                Assert.Equal("1991", result.Part2);
-            }
+            Assert.Equal("2814", part1);
+            Assert.Equal("1991", part2);
         }
     }
 }

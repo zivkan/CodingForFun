@@ -9,7 +9,7 @@ namespace aoc.csharp._2019
         public Queue<int> Output { get; }
 
         private int _instructionPointer;
-        private int[] _memory;
+        private readonly int[] _memory;
 
         public IntcodeVm(int[] program)
         {

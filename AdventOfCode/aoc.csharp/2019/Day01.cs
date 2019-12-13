@@ -34,7 +34,7 @@ namespace aoc.csharp._2019
             int part1 = 0;
             int part2 = 0;
 
-            string line;
+            string? line;
             while ((line = input.ReadLine()) != null)
             {
                 int mass = int.Parse(line);

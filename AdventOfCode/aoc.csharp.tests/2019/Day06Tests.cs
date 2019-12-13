@@ -10,13 +10,11 @@ namespace aoc.csharp.tests._2019
         [Fact]
         public void Answer()
         {
-            using (var input = Input.Get(2019, 06))
-            {
-                var result = Day06.GetAnswer(input);
+            using var input = Input.Get(2019, 06);
+            var (part1, part2) = Day06.GetAnswer(input);
 
-                Assert.Equal("315757", result.Part1);
-                Assert.Equal("481", result.Part2);
-            }
+            Assert.Equal("315757", part1);
+            Assert.Equal("481", part2);
         }
 
         [Fact]
@@ -33,12 +31,10 @@ D)I
 E)J
 J)K
 K)L";
-            using (var reader = new StringReader(input))
-            {
-                var result = Day06.ParseGraph(reader);
+            using var reader = new StringReader(input);
+            var result = Day06.ParseGraph(reader);
 
-                Assert.Equal(42, result.Select(kvp => kvp.Value.Depth).Sum());
-            }
+            Assert.Equal(42, result.Select(kvp => kvp.Value.Depth).Sum());
         }
 
         [Fact]
@@ -57,12 +53,10 @@ J)K
 K)L
 K)YOU
 I)SAN";
-            using (var reader = new StringReader(input))
-            {
-                var result = Day06.GetAnswer(reader);
+            using var reader = new StringReader(input);
+            (_, var part2) = Day06.GetAnswer(reader);
 
-                Assert.Equal("4", result.Part2);
-            }
+            Assert.Equal("4", part2);
         }
     }
 }

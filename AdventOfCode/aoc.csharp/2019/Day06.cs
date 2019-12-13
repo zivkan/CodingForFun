@@ -98,10 +98,7 @@ namespace aoc.csharp._2019
             var mapping = ParseMapping(input);
 
             var result = new Dictionary<string, Node>();
-            Node node = new Node("COM")
-            {
-                Depth = 0
-            };
+            Node node = new Node("COM");
             result.Add(node.Name, node);
 
             // get full list of nodes, and set parent/children
@@ -117,15 +114,19 @@ namespace aoc.csharp._2019
             // calculate depth for all nodes
             var toProcess = new Stack<Node>();
             node = result["COM"];
-            foreach (var child in node.Children)
-            {
-                toProcess.Push(child);
-            }
+            toProcess.Push(node);
 
             while (toProcess.Count > 0)
             {
                 node = toProcess.Pop();
-                node.Depth = node.Parent.Depth + 1;
+                if (node.Parent == null)
+                {
+                    node.Depth = 0;
+                }
+                else
+                {
+                    node.Depth = node.Parent.Depth + 1;
+                }
 
                 foreach(var child in node.Children)
                 {

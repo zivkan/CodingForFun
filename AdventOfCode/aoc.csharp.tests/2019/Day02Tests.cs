@@ -1,29 +1,18 @@
 ﻿using aoc.csharp._2019;
-using System.Collections.Generic;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace aoc.csharp.tests._2019
 {
     public class Day02Tests
     {
-        private readonly ITestOutputHelper output;
-
-        public Day02Tests(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
-
         [Fact]
         public void Answer()
         {
-            using (var input = Input.Get(2019, 02))
-            {
-                var result = Day02.GetAnswer(input);
+            using var input = Input.Get(2019, 02);
+            var (part1, part2) = Day02.GetAnswer(input);
 
-                Assert.Equal("4690667", result.Part1);
-                Assert.Equal("6255", result.Part2);
-            }
+            Assert.Equal("4690667", part1);
+            Assert.Equal("6255", part2);
         }
 
         [Theory]
