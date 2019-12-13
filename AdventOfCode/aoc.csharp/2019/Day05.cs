@@ -13,15 +13,14 @@ namespace aoc.csharp._2019
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var vmInput = new Queue<int>();
-            vmInput.Enqueue(1);
             var memory = Input.To<int[]>(input);
-            var workingMemory = (int[])memory.Clone();
 
-            var vmOutput = IntcodeVm.RunProgram(workingMemory, vmInput);
+            var vm = new IntcodeVm(memory);
+            vm.Input.Enqueue(1);
+            while (vm.Step()) ;
 
             int? outputValue = null;
-            while (vmOutput.TryDequeue(out var value))
+            while (vm.Output.TryDequeue(out var value))
             {
                 if (outputValue.HasValue)
                 {
@@ -36,14 +35,15 @@ namespace aoc.csharp._2019
 
             string part1 = outputValue?.ToString() ?? throw new Exception("no output");
 
-            vmInput.Clear();
-            vmInput.Enqueue(5);
-            vmOutput = IntcodeVm.RunProgram(memory, vmInput);
-            if (vmOutput.Count != 1)
+            vm = new IntcodeVm(memory);
+            vm.Input.Enqueue(5);
+            while (vm.Step()) ;
+
+            if (vm.Output.Count != 1)
             {
-                throw new Exception("Part 2 expected 1 output value, but got " + vmOutput.Count);
+                throw new Exception("Part 2 expected 1 output value, but got " + vm.Output.Count);
             }
-            var part2 = vmOutput.Dequeue().ToString();
+            var part2 = vm.Output.Dequeue().ToString();
 
             return (part1, part2);
         }

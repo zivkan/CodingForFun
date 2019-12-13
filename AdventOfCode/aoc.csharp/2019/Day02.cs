@@ -18,7 +18,9 @@ namespace aoc.csharp._2019
             var part1 = (int[])list.Clone();
             part1[1] = 12;
             part1[2] = 2;
-            IntcodeVm.RunProgram(part1, new Queue<int>());
+            var vm = new IntcodeVm(part1);
+            while (vm.Step()) ;
+            var part1Result = vm.GetMemory(0).ToString();
 
             var part2 = new int[list.Length];
             for (int verb = 0; verb < 100; verb++)
@@ -28,11 +30,12 @@ namespace aoc.csharp._2019
                     Array.Copy(list, part2, list.Length);
                     part2[1] = noun;
                     part2[2] = verb;
-                    IntcodeVm.RunProgram(part2, new Queue<int>());
+                    vm = new IntcodeVm(part2);
+                    while (vm.Step()) ;
 
-                    if (part2[0] == 19690720)
+                    if (vm.GetMemory(0) == 19690720)
                     {
-                        return (part1[0].ToString(), (100 * noun + verb).ToString());
+                        return (part1Result, (100 * noun + verb).ToString());
                     }
                 }
             }

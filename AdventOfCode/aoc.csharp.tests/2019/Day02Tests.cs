@@ -34,8 +34,16 @@ namespace aoc.csharp.tests._2019
         [InlineData(new[] { 1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50 }, new[] { 3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50 })]
         public void RunProgram(int[] memory, int[] expected)
         {
-            IntcodeVm.RunProgram(memory, new Queue<int>());
-            Assert.Equal(expected, memory);
+            var vm = new IntcodeVm(memory);
+            while (vm.Step()) ;
+
+            int[] actual = new int[memory.Length];
+            for (int i = 0; i < actual.Length; i++)
+            {
+                actual[i] = vm.GetMemory(i);
+            }
+
+            Assert.Equal(expected, actual);
         }
     }
 }
