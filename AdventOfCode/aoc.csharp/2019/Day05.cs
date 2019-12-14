@@ -13,13 +13,13 @@ namespace aoc.csharp._2019
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var memory = Input.To<int[]>(input);
+            var memory = Input.ToList<long>(input).ToArray();
 
             var vm = new IntcodeVm(memory);
             vm.Input.Enqueue(1);
             while (vm.Step()) ;
 
-            int? outputValue = null;
+            long? outputValue = null;
             while (vm.Output.TryDequeue(out var value))
             {
                 if (outputValue.HasValue)

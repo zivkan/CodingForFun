@@ -13,16 +13,16 @@ namespace aoc.csharp._2019
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var program = Input.To<int[]>(input);
-            (var part1, _) = FindHighestSignal(program, new[] { 0, 1, 2, 3, 4 });
-            (var part2, _) = FindHighestSignal(program, new[] { 5, 6, 7, 8, 9 });
+            var program = Input.ToList<long>(input).ToArray();
+            (var part1, _) = FindHighestSignal(program, new long[] { 0, 1, 2, 3, 4 });
+            (var part2, _) = FindHighestSignal(program, new long[] { 5, 6, 7, 8, 9 });
             return (part1.ToString(), part2.ToString());
         }
 
-        public static (int value, int[] phaseConfiguration) FindHighestSignal(int[] program, int[] phases)
+        public static (long value, long[] phaseConfiguration) FindHighestSignal(long[] program, long[] phases)
         {
-            var max = 0;
-            int[]? phaseConfiguration = null;
+            long max = 0;
+            long[]? phaseConfiguration = null;
 
             foreach (var phase in GetPermutations(phases))
             {
@@ -42,7 +42,7 @@ namespace aoc.csharp._2019
             return (max, phaseConfiguration);
         }
 
-        private static int RunAmps(int[]  program, int[] phase)
+        private static long RunAmps(long[]  program, long[] phase)
         {
             var amps = new IntcodeVm[phase.Length];
             int amp;
@@ -55,7 +55,7 @@ namespace aoc.csharp._2019
             amps[0].Input.Enqueue(0);
 
             amp = 0;
-            int? thrust = null;
+            long? thrust = null;
             while (true)
             {
                 if (!amps[amp].Step())

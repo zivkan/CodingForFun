@@ -7,28 +7,6 @@ namespace aoc.csharp
 {
     internal static class Input
     {
-        private static readonly Type intListType = typeof(List<int>);
-        private static readonly Type intIListType = typeof(IList<int>);
-        private static readonly Type intIEnumerableType = typeof(IEnumerable<int>);
-        private static readonly Type intArray = typeof(int[]);
-
-        internal static T To<T>(TextReader reader)
-        {
-            var type = typeof(T);
-            if (type == intListType || type == intIListType || type == intIEnumerableType)
-            {
-                return (T)ToIntList(reader);
-            }
-            else if (type == intArray)
-            {
-                return (T)(object)((List<int>)ToIntList(reader)).ToArray();
-            }
-            else
-            {
-                throw new NotSupportedException();
-            }
-        }
-
         internal static string[] GetLines(TextReader input)
         {
             var lines = new List<string>();
@@ -41,9 +19,9 @@ namespace aoc.csharp
             return lines.ToArray();
         }
 
-        private static object ToIntList(TextReader reader)
+        internal static List<T> ToList<T>(TextReader reader) where T : IConvertible
         {
-            var list = new List<int>();
+            var list = new List<T>();
             var sb = new StringBuilder();
 
             int read;
@@ -58,7 +36,7 @@ namespace aoc.csharp
                 {
                     if (sb.Length > 0)
                     {
-                        list.Add(int.Parse(sb.ToString()));
+                        list.Add((T)Convert.ChangeType(sb.ToString(), typeof(T)));
                         sb.Clear();
                     }
                 }
@@ -70,7 +48,7 @@ namespace aoc.csharp
 
             if (sb.Length > 0)
             {
-                list.Add(int.Parse(sb.ToString()));
+                list.Add((T)Convert.ChangeType(sb.ToString(), typeof(T)));
             }
 
             return list;
