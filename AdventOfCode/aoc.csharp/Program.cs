@@ -8,12 +8,13 @@ namespace aoc.csharp
     {
         static void Main(string[] args)
         {
-            var rootCommand = new Command("aoc.csharp");
-            rootCommand.Add(new Argument<int>("year")
+            var rootCommand = new Command("aoc.csharp")
             {
-                
-            });
-            rootCommand.Add(new Argument<int>("day"));
+                new Argument<int>("year")
+                {
+                },
+                new Argument<int>("day")
+            };
 
             rootCommand.Handler = CommandHandler.Create<int, int>((int year, int day) =>
             {
@@ -27,9 +28,13 @@ namespace aoc.csharp
                 var instance = Activator.CreateInstance(type);
                 if (instance is ISolver solver)
                 {
-                    var result = solver.GetSolution(Console.In);
-                    Console.WriteLine("Part 1 solution: " + result.Part1);
-                    Console.WriteLine("Part 2 solution: " + result.Part2);
+                    var (part1, part2) = solver.GetSolution(Console.In);
+
+                    Console.WriteLine("Part 1 solution:");
+                    Console.WriteLine(part1);
+                    Console.WriteLine();
+                    Console.WriteLine("Part 2 solution:");
+                    Console.WriteLine(part2);
                 }
                 else
                 {
