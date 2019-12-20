@@ -9,9 +9,9 @@ namespace aoc.csharp.Geometry
 
         public bool Equals([AllowNull] Point x, [AllowNull] Point y)
         {
-            if (x == null || y == null)
+            if (x is null || y is null)
             {
-                return x == y;
+                return ReferenceEquals(x, y);
             }
 
             if (ReferenceEquals(x, y))

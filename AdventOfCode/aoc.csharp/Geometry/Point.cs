@@ -21,14 +21,34 @@ namespace aoc.csharp.Geometry
             return new Point(a.X + b.X, a.Y + b.Y);
         }
 
+        public static Point operator -(Point a, Point b)
+        {
+            return new Point(a.X - b.X, a.Y - b.Y);
+        }
+
         public override string ToString()
         {
             return $"({X},{Y})";
         }
 
+        public static bool operator ==(Point a, Point b)
+        {
+            return PointComparer.Instance.Equals(a, b);
+        }
+
+        public static bool operator !=(Point a, Point b)
+        {
+            return !PointComparer.Instance.Equals(a, b);
+        }
+
         public bool Equals([AllowNull] Point other)
         {
             return PointComparer.Instance.Equals(this, other);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as Point);
         }
 
         public override int GetHashCode()
