@@ -26,8 +26,8 @@ namespace aoc.csharp.tests._2019
             var intersection = line1.Keys.Intersect(line2.Keys).ToList();
 
             Assert.Equal(2, intersection.Count);
-            Assert.Contains(new Point(3, 3), intersection);
-            Assert.Contains(new Point(6, 5), intersection);
+            Assert.Contains(new Point2D(3, 3), intersection);
+            Assert.Contains(new Point2D(6, 5), intersection);
         }
 
         [Theory]

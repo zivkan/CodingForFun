@@ -8,10 +8,10 @@ namespace aoc.csharp._2019
 {
     public class Day03 : ISolver
     {
-        private static readonly Point Left =new Point(-1, 0);
-        private static readonly Point Right = new Point(1, 0);
-        private static readonly Point Up = new Point(0, 1);
-        private static readonly Point Down = new Point(0, -1);
+        private static readonly Point2D Left =new Point2D(-1, 0);
+        private static readonly Point2D Right = new Point2D(1, 0);
+        private static readonly Point2D Up = new Point2D(0, 1);
+        private static readonly Point2D Down = new Point2D(0, -1);
 
         public (string Part1, string Part2) GetSolution(TextReader input)
         {
@@ -35,7 +35,7 @@ namespace aoc.csharp._2019
                 GetCrossedCircuitLength(intersections, line1, line2).ToString());
         }
 
-        public static uint GetCrossedCircuitLength(IEnumerable<Point> intersections, Dictionary<Point, uint> line1, Dictionary<Point, uint> line2)
+        public static uint GetCrossedCircuitLength(IEnumerable<Point2D> intersections, Dictionary<Point2D, uint> line1, Dictionary<Point2D, uint> line2)
         {
             uint min = int.MaxValue;
 
@@ -53,16 +53,16 @@ namespace aoc.csharp._2019
             return min;
         }
 
-        public static Dictionary<Point, uint> GetLinePoints(string path)
+        public static Dictionary<Point2D, uint> GetLinePoints(string path)
         {
-            var points = new Dictionary<Point, uint>(PointComparer.Instance);
-            Point position = Point.Zero;
+            var points = new Dictionary<Point2D, uint>(Point2DComparer.Instance);
+            Point2D position = Point2D.Zero;
             uint length = 0;
 
             var segments = path.Split(",");
             foreach (var segment in segments)
             {
-                Point direction;
+                Point2D direction;
                 switch (segment[0])
                 {
                     case 'U':
@@ -98,7 +98,7 @@ namespace aoc.csharp._2019
             return points;
         }
 
-        public static uint ShortestManhattenDistance(IEnumerable<Point> points)
+        public static uint ShortestManhattenDistance(IEnumerable<Point2D> points)
         {
             return points.Select(p => p.GetManhattenDistance())
                 .Min();

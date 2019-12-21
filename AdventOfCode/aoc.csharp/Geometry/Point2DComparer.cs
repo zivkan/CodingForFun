@@ -3,11 +3,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace aoc.csharp.Geometry
 {
-    public class PointComparer : IEqualityComparer<Point>
+    public class Point2DComparer : IEqualityComparer<Point2D>
     {
-        public static PointComparer Instance { get; } = new PointComparer();
+        public static Point2DComparer Instance { get; } = new Point2DComparer();
 
-        public bool Equals([AllowNull] Point x, [AllowNull] Point y)
+        public bool Equals([AllowNull] Point2D x, [AllowNull] Point2D y)
         {
             if (x is null || y is null)
             {
@@ -22,7 +22,7 @@ namespace aoc.csharp.Geometry
             return x.X == y.X && x.Y == y.Y;
         }
 
-        public int GetHashCode([DisallowNull] Point obj)
+        public int GetHashCode([DisallowNull] Point2D obj)
         {
             unchecked
             {

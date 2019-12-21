@@ -33,7 +33,7 @@ namespace aoc.csharp._2019
                 }
             }
 
-            Point? target200 = null;
+            Point2D? target200 = null;
             if (baseLayout != null)
             {
                 var targets = GetLaserTargets(baseLayout);
@@ -43,7 +43,7 @@ namespace aoc.csharp._2019
             return (maxVisible.ToString(), (target200.X * 100 + target200.Y).ToString());
         }
 
-        public static Point GetDirection(Point vector)
+        public static Point2D GetDirection(Point2D vector)
         {
             var end = Math.Min(Math.Abs(vector.X), Math.Abs(vector.Y));
             if (end == 0)
@@ -55,21 +55,21 @@ namespace aoc.csharp._2019
             {
                 if (vector.X % i == 0 && vector.Y % i == 0)
                 {
-                    return new Point(vector.X / i, vector.Y / i);
+                    return new Point2D(vector.X / i, vector.Y / i);
                 }
             }
 
             return vector;
         }
 
-        public static List<Point> GetAsteroids(string[] map)
+        public static List<Point2D> GetAsteroids(string[] map)
         {
             if (map == null || map.Length == 0)
             {
                 throw new ArgumentException("Map must be provided with at least one line");
             }
 
-            var asteroids = new List<Point>();
+            var asteroids = new List<Point2D>();
             var width = map[0].Length;
 
             for (int y = 0; y < map.Length; y++)
@@ -84,7 +84,7 @@ namespace aoc.csharp._2019
                 {
                     if (line[x] == '#')
                     {
-                        asteroids.Add(new Point(x, y));
+                        asteroids.Add(new Point2D(x, y));
                     }
                 }
             }
@@ -92,7 +92,7 @@ namespace aoc.csharp._2019
             return asteroids;
         }
 
-        public static List<AsteroidInfo> GetAsteroidInfos(List<Point> asteroids, Point origin)
+        public static List<AsteroidInfo> GetAsteroidInfos(List<Point2D> asteroids, Point2D origin)
         {
             var result = new List<AsteroidInfo>(asteroids.Count - 1);
 
@@ -121,7 +121,7 @@ namespace aoc.csharp._2019
                 .Count();
         }
 
-        public static IEnumerable<Point> GetLaserTargets(List<AsteroidInfo> asteroids)
+        public static IEnumerable<Point2D> GetLaserTargets(List<AsteroidInfo> asteroids)
         {
             var targets = asteroids
                 .GroupBy(a => a.Direction)
@@ -167,11 +167,11 @@ namespace aoc.csharp._2019
 
         public class AsteroidInfo
         {
-            public Point Position { get; }
-            public Point Vector { get; }
-            public Point Direction { get; }
+            public Point2D Position { get; }
+            public Point2D Vector { get; }
+            public Point2D Direction { get; }
 
-            public AsteroidInfo(Point position, Point vector, Point direction)
+            public AsteroidInfo(Point2D position, Point2D vector, Point2D direction)
             {
                 Position = position;
                 Vector = vector;

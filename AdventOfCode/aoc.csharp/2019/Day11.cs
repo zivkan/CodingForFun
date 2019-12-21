@@ -24,7 +24,7 @@ namespace aoc.csharp._2019
             return (part1.Count.ToString(), ToString(part2));
         }
 
-        private static string ToString(Dictionary<Point, bool> paint)
+        private static string ToString(Dictionary<Point2D, bool> paint)
         {
             int top, bottom, left, right;
             top = bottom = 0;
@@ -49,7 +49,7 @@ namespace aoc.csharp._2019
 
                 for (int x = left; x <= right; x++)
                 {
-                    var value = paint.GetValueOrDefault(new Point(x, y), defaultValue: false);
+                    var value = paint.GetValueOrDefault(new Point2D(x, y), defaultValue: false);
                     sb.Append(value ? '#' : ' ');
                 }
             }
@@ -57,12 +57,12 @@ namespace aoc.csharp._2019
             return sb.ToString();
         }
 
-        private static Dictionary<Point, bool> GetPaintedPanels(long[] program, bool startOnWhite)
+        private static Dictionary<Point2D, bool> GetPaintedPanels(long[] program, bool startOnWhite)
         {
             var vm = new IntcodeVm(program);
-            var position = new Point(0, 0);
-            var direction = new Point(0, 1);
-            var painted = new Dictionary<Point, bool>();
+            var position = new Point2D(0, 0);
+            var direction = new Point2D(0, 1);
+            var painted = new Dictionary<Point2D, bool>();
 
             vm.Input.Enqueue(startOnWhite ? 1 : 0);
             while (vm.Step())
@@ -75,11 +75,11 @@ namespace aoc.csharp._2019
                     bool white = encodedColour == 1 ? true : encodedColour == 0 ? false : throw new Exception("Unsupported paint value " + encodedColour);
                     if (encodedTurn == 0)
                     {
-                        direction = new Point(-direction.Y, direction.X);
+                        direction = new Point2D(-direction.Y, direction.X);
                     }
                     else if (encodedTurn == 1)
                     {
-                        direction = new Point(direction.Y, -direction.X);
+                        direction = new Point2D(direction.Y, -direction.X);
                     }
                     else
                     {

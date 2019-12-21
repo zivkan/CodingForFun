@@ -38,8 +38,8 @@ namespace aoc.csharp.tests._2019
         [InlineData(6, 2, 3, 1)]
         public void GetDirectionTests(int x, int y, int expectedX, int expectedY)
         {
-            var vector = new Point(x, y);
-            var expected = new Point(expectedX, expectedY);
+            var vector = new Point2D(x, y);
+            var expected = new Point2D(expectedX, expectedY);
             var actual = Day10.GetDirection(vector);
             Assert.Equal(expected, actual);
         }
@@ -58,7 +58,7 @@ namespace aoc.csharp.tests._2019
         public void VisibleAstroidsTests(int x, int y, int expected)
         {
             var asteroids = Day10.GetAsteroids(_sampleMap);
-            var asteroidInfos = Day10.GetAsteroidInfos(asteroids, new Point(x, y));
+            var asteroidInfos = Day10.GetAsteroidInfos(asteroids, new Point2D(x, y));
             var visible = Day10.GetVisibleAsteroidCount(asteroidInfos);
 
             Assert.Equal(expected, visible);
@@ -84,7 +84,7 @@ namespace aoc.csharp.tests._2019
                 "..S.R.....Q....PO"
             };
             var asteroids = Day10.GetAsteroids(map);
-            var targets = Day10.GetAsteroidInfos(asteroids, new Point(8, 3));
+            var targets = Day10.GetAsteroidInfos(asteroids, new Point2D(8, 3));
             var order = Day10.GetLaserTargets(targets).ToList();
 
             var expected = targets.Select(t => t.Position)
