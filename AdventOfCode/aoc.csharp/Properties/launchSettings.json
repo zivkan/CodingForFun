@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "aoc.csharp": {
+      "commandName": "Project",
+      "commandLineArgs": "2019 13 \"C:\\git\\CodingForFun\\AdventOfCode\\input\\2019\\day13.txt\""
+    }
+  }
+}

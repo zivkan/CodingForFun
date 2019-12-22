@@ -24,7 +24,11 @@ namespace aoc.csharp.tests._2019
             var vm = new IntcodeVm(program);
             while (vm.Step()) ;
 
-            var output = vm.Output.ToArray();
+            var output = new long[vm.Output.Count];
+            for (int i = 0; i < output.Length; i++)
+            {
+                output[i] = vm.Output.Dequeue();
+            }
             Assert.Equal(expected, output);
         }
     }

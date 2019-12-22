@@ -5,25 +5,30 @@ namespace aoc.csharp._2019
 {
     public class IntcodeVm
     {
-        public Queue<long> Input { get; }
-        public Queue<long> Output { get; }
+        public IQueue<long> Input { get; }
+        public IQueue<long> Output { get; }
 
         private long _instructionPointer;
         private readonly Dictionary<long, long> _memory;
         private long _relativeBase;
 
-        public IntcodeVm(long[] program)
+        public IntcodeVm(IList<long> program)
+            : this(program, new StandardQueue<long>(), new StandardQueue<long>())
         {
-            _memory = new Dictionary<long, long>(program.Length);
-            for (int i = 0; i < program.Length; i++)
+        }
+
+        public IntcodeVm(IList<long> program, IQueue<long> input, IQueue<long> output)
+        {
+            _memory = new Dictionary<long, long>(program.Count);
+            for (int i = 0; i < program.Count; i++)
             {
                 _memory[i] = program[i];
             }
 
             _instructionPointer = 0;
             _relativeBase = 0;
-            Input = new Queue<long>();
-            Output = new Queue<long>();
+            Input = input;
+            Output = output;
         }
 
         public bool Step()

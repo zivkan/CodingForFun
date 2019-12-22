@@ -62,29 +62,14 @@ namespace aoc.csharp._2019
             var segments = path.Split(",");
             foreach (var segment in segments)
             {
-                Point2D direction;
-                switch (segment[0])
+                var direction = (segment[0]) switch
                 {
-                    case 'U':
-                        direction = Up;
-                        break;
-
-                    case 'D':
-                        direction = Down;
-                        break;
-
-                    case 'L':
-                        direction = Left;
-                        break;
-
-                    case 'R':
-                        direction = Right;
-                        break;
-
-                    default:
-                        throw new Exception("Unknown segment " + segment);
-                }
-
+                    'U' => Up,
+                    'D' => Down,
+                    'L' => Left,
+                    'R' => Right,
+                    _ => throw new Exception("Unknown segment " + segment),
+                };
                 int distance = int.Parse(segment.AsSpan(1));
 
                 for (int i = 0; i < distance; i++)

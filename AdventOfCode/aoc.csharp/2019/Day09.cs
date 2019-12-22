@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace aoc.csharp._2019
 {
@@ -30,7 +31,18 @@ namespace aoc.csharp._2019
             vm.Input.Enqueue(2);
             while (vm.Step()) ;
 
-            var part2 = string.Join(",", vm.Output.ToArray());
+            var sb = new StringBuilder();
+            while (vm.Output.Count > 0)
+            {
+                sb.Append(vm.Output.Dequeue());
+                sb.Append(',');
+            }
+            if (sb[sb.Length-1] == ',')
+            {
+                sb.Length--;
+            }
+
+            var part2 = sb.ToString();
 
             return (part1.ToString(), part2);
         }

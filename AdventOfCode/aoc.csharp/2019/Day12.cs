@@ -246,7 +246,7 @@ namespace aoc.csharp._2019
 
         public class Moons : IEquatable<Moons>, IEnumerable<Moon>
         {
-            private IReadOnlyList<Moon> _moons;
+            private readonly IReadOnlyList<Moon> _moons;
 
             public Moons(IReadOnlyList<Moon> moons)
             {
