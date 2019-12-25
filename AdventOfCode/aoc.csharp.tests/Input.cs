@@ -9,7 +9,7 @@ namespace aoc.csharp.tests
 
         internal static StreamReader Get(int year, int day)
         {
-            var resourceName = $"aoc.csharp.tests._{year}.day{day:D2}.txt";
+            var resourceName = $"aoc.csharp.tests.input._{year}.day{day:D2}.txt";
             var stream = Assembly.GetManifestResourceStream(resourceName);
             if (stream == null)
             {
