@@ -3,102 +3,44 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2016
 {
-    public class Day04
+    public class Day04 : ISolver
     {
-        private readonly ITestOutputHelper _output;
-
-        private static readonly Regex Regex = new Regex(@"^([a-z-]+)\-(\d+)\[([a-z]+)\]$");
-
-        public Day04(ITestOutputHelper output)
+        public (string Part1, string Part2) GetSolution(TextReader input)
         {
-            _output = output;
+            return GetAnswer(input);
         }
 
-        [Fact]
-        public void Part1Sample()
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            string input = "aaaaa-bbb-z-y-x-123[abxyz]\n" +
-                           "a-b-c-d-e-f-g-h-987[abcde]\n" +
-                           "not-a-real-room-404[oarel]\n" +
-                           "totally-real-room-200[decoy]";
-
-            int sum;
-            using (var reader = new StringReader(input))
-            {
-                sum = GetSumOfRealRooms(reader);
-            }
-
-            Assert.Equal(1514, sum);
-        }
-
-        [Fact]
-        public void Part1()
-        {
-            int sum;
-            using (var reader = GetPuzzleInput.Day(4))
-            {
-                sum = GetSumOfRealRooms(reader);
-            }
-
-            _output.WriteLine("{0}", sum);
-        }
-
-        [Fact]
-        public void Part2Sample()
-        {
-            var room = new RoomInformation("qzmt-zixmtkozy-ivhz", 343, null);
-
-            string result = ShiftCypher(room.Name, room.SectorId);
-
-            Assert.Equal("very encrypted name", result);
-        }
-
-        [Fact]
-        public void Part2()
-        {
+            int part1 = 0;
             var matches = new List<KeyValuePair<string, int>>();
-            using (var reader = GetPuzzleInput.Day(4))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    var room = ParseRoom(line);
-                    var decrypted = ShiftCypher(room.Name, room.SectorId);
-                    if (decrypted.IndexOf("north") != -1 && decrypted.IndexOf("pole") != -1)
-                    {
-                        matches.Add(new KeyValuePair<string, int>(decrypted, room.SectorId));
-                    }
-                }
-            }
-
-            foreach (var match in matches)
-            {
-                _output.WriteLine("{0}: {1}", match.Key, match.Value);
-            }
-        }
-
-        private int GetSumOfRealRooms(TextReader reader)
-        {
-            int sum = 0;
-            string line;
-            while ((line = reader.ReadLine()) != null)
+            string? line;
+            while ((line = input.ReadLine()) != null)
             {
                 var room = ParseRoom(line);
                 if (IsRealRoom(room))
                 {
-                    sum += room.SectorId;
+                    part1 += room.SectorId;
+                }
+
+                var decrypted = ShiftCypher(room.Name, room.SectorId);
+                if (decrypted.IndexOf("north") != -1 && decrypted.IndexOf("pole") != -1)
+                {
+                    matches.Add(new KeyValuePair<string, int>(decrypted, room.SectorId));
                 }
             }
 
-            return sum;
+            var part2 = matches.Single().Value;
+
+            return (part1.ToString(), part2.ToString());
         }
 
-        private RoomInformation ParseRoom(string input)
+        private static readonly Regex Regex = new Regex(@"^([a-z-]+)\-(\d+)\[([a-z]+)\]$");
+
+        public static RoomInformation ParseRoom(string input)
         {
             var match = Regex.Match(input);
             if (!match.Success)
@@ -113,7 +55,7 @@ namespace csharp
             return new RoomInformation(name, sectorId, checksum);
         }
 
-        private bool IsRealRoom(RoomInformation room)
+        public static bool IsRealRoom(RoomInformation room)
         {
             var checksum = CalculateChecksum(room.Name);
             return ChecksumsAreEqual(room.Checksum, checksum);
@@ -128,7 +70,7 @@ namespace csharp
             var top5Chars = charCounts.OrderByDescending(cc => cc.Value)
                 .ThenBy(cc => cc.Key)
                 .Take(5)
-                .Select(cc=>cc.Key)
+                .Select(cc => cc.Key)
                 .ToArray();
             return new string(top5Chars);
         }
@@ -148,7 +90,7 @@ namespace csharp
             return expected.Intersect(calculated).Count() == expected.Length;
         }
 
-        private string ShiftCypher(string roomName, int amount)
+        public static string ShiftCypher(string roomName, int amount)
         {
             char[] buffer = new char[roomName.Length];
 
@@ -163,7 +105,7 @@ namespace csharp
                 {
                     int step1 = c - 'a';
                     int step2 = step1 + amount;
-                    int step3 = step2%26;
+                    int step3 = step2 % 26;
                     int step4 = step3 + 'a';
                     buffer[i] = (char)step4;
                 }
@@ -176,7 +118,7 @@ namespace csharp
             return new string(buffer);
         }
 
-        private class RoomInformation
+        public class RoomInformation
         {
             public string Name { get; }
             public int SectorId { get; }

@@ -1,78 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2016
 {
-    public class Day10
+    public class Day10 : ISolver
     {
-        private readonly ITestOutputHelper _output;
+        public (string Part1, string Part2) GetSolution(TextReader input)
+        {
+            return GetAnswer(input);
+        }
 
-        private static readonly Regex BotSpecificationRegex = 
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
+        {
+            var specification = ParseSpecification(input.ReadToEnd());
+            var bots = ConfigureBots(specification.Item1, specification.Item2);
+
+            var chip61And17Comparer = bots.Single(b => b.TransferDetails.Any(td => td.MicrochipValue == 61) && b.TransferDetails.Any(td => td.MicrochipValue == 17));
+            var part1 = chip61And17Comparer.Number;
+
+            var outputBins = GetOutputBinTransfers(bots);
+            var part2 = outputBins[0] * outputBins[1] * outputBins[2];
+
+            return (part1.ToString(), part2.ToString());
+        }
+
+        private static readonly Regex BotSpecificationRegex =
             new Regex("^bot (\\d+) gives low to (bot|output) (\\d+) and high to (bot|output) (\\d+)$", RegexOptions.Multiline);
         private static readonly Regex InputSpecificationRegex =
             new Regex("^value (\\d+) goes to bot (\\d+)$", RegexOptions.Multiline);
 
-        public Day10(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
-        [Fact]
-        public void Sample()
-        {
-            string input = "value 5 goes to bot 2\r\n" +
-                "bot 2 gives low to bot 1 and high to bot 0\r\n" +
-                "value 3 goes to bot 1\r\n" +
-                "bot 1 gives low to output 1 and high to bot 0\r\n" +
-                "bot 0 gives low to output 2 and high to output 0\r\n" +
-                "value 2 goes to bot 2";
-
-            var specification = ParseSpecification(input);
-            var botsList = ConfigureBots(specification.Item1, specification.Item2);
-
-            var outputBins = GetOutputBinTransfers(botsList);
-
-            Assert.True(outputBins.ContainsKey(0));
-            Assert.Equal(5, outputBins[0]);
-            Assert.True(outputBins.ContainsKey(1));
-            Assert.Equal(2, outputBins[1]);
-            Assert.True(outputBins.ContainsKey(2));
-            Assert.Equal(3, outputBins[2]);
-
-            var bot2 = botsList.Single(b => b.Number == 2);
-            Assert.True(bot2.TransferDetails.Any(td => td.MicrochipValue == 5) && bot2.TransferDetails.Any(td => td.MicrochipValue == 2));
-        }
-
-        [Fact]
-        public void Parts1And2()
-        {
-            var input = GetPuzzleInput.DayText(10);
-            var specification = ParseSpecification(input);
-            var bots = ConfigureBots(specification.Item1, specification.Item2);
-
-            var chip61And17Comparer = bots.Single(b => b.TransferDetails.Any(td => td.MicrochipValue == 61) && b.TransferDetails.Any(td => td.MicrochipValue == 17));
-            _output.WriteLine("Part 1: {0}", chip61And17Comparer.Number);
-
-            var outputBins = GetOutputBinTransfers(bots);
-            _output.WriteLine("Part 2: {0}", outputBins[0] * outputBins[1] * outputBins[2]);
-        }
-
-        private IReadOnlyDictionary<int, int> GetOutputBinTransfers(IReadOnlyList<Bot> bots)
+        public static IReadOnlyDictionary<int, int> GetOutputBinTransfers(IReadOnlyList<Bot> bots)
         {
             return bots.SelectMany(b => b.TransferDetails)
                 .Where(td => td.TargetType == TransferTarget.OutputBin)
                 .ToDictionary(td => td.TargetNumber, td => td.MicrochipValue);
         }
 
-        private void AddBotConfiguration(int botNumber, int microchipValue, Dictionary<int, int> partialConfigurations, List<Bot> configuredBots, IReadOnlyList<BotSpecification> botSpecifications)
+        private static void AddBotConfiguration(
+            int botNumber, 
+            int microchipValue, 
+            Dictionary<int, int> partialConfigurations, 
+            List<Bot> configuredBots, 
+            IReadOnlyList<BotSpecification> botSpecifications)
         {
-            int firstChipValue;
-            if (!partialConfigurations.TryGetValue(botNumber, out firstChipValue))
+            if (!partialConfigurations.TryGetValue(botNumber, out int firstChipValue))
             {
                 partialConfigurations.Add(botNumber, microchipValue);
             }
@@ -111,7 +86,7 @@ namespace csharp
             }
         }
 
-        private Tuple<List<BotSpecification>, List<InputSpecification>> ParseSpecification(string specification)
+        public static Tuple<List<BotSpecification>, List<InputSpecification>> ParseSpecification(string specification)
         {
             specification = specification.Replace("\r", string.Empty);
             var bots = ParseBotSpecification(specification);
@@ -119,12 +94,14 @@ namespace csharp
             return new Tuple<List<BotSpecification>, List<InputSpecification>>(bots, inputs);
         }
 
-        private List<BotSpecification> ParseBotSpecification(string specification)
+        private static List<BotSpecification> ParseBotSpecification(string specification)
         {
             var bots = new List<BotSpecification>();
             var matches = BotSpecificationRegex.Matches(specification);
-            foreach (Match match in matches)
+            foreach (Match? match in matches)
             {
+                if (match == null) throw new Exception();
+
                 var botNumber = int.Parse(match.Groups[1].Value);
                 var lowValueTargetType = ParseTargetType(match.Groups[2].Value);
                 var lowValueTargetNumber = int.Parse(match.Groups[3].Value);
@@ -140,7 +117,7 @@ namespace csharp
             return bots;
         }
 
-        private TransferTarget ParseTargetType(string value)
+        private static TransferTarget ParseTargetType(string value)
         {
             if (value.Equals("bot", StringComparison.OrdinalIgnoreCase))
             {
@@ -156,12 +133,14 @@ namespace csharp
             }
         }
 
-        private List<InputSpecification> ParseInputSpecification(string specification)
+        private static List<InputSpecification> ParseInputSpecification(string specification)
         {
             var inputs = new List<InputSpecification>();
             var matches = InputSpecificationRegex.Matches(specification);
-            foreach (Match match in matches)
+            foreach (Match? match in matches)
             {
+                if (match == null) throw new Exception();
+
                 var microchipValue = int.Parse(match.Groups[1].Value);
                 var botNumber = int.Parse(match.Groups[2].Value);
 
@@ -172,7 +151,7 @@ namespace csharp
             return inputs;
         }
 
-        private IReadOnlyList<Bot> ConfigureBots(IReadOnlyList<BotSpecification> botSpecifications, IReadOnlyList<InputSpecification> inputSpecifications)
+        public static IReadOnlyList<Bot> ConfigureBots(IReadOnlyList<BotSpecification> botSpecifications, IReadOnlyList<InputSpecification> inputSpecifications)
         {
             var configuredBots = new List<Bot>();
             var partialConfigurations = new Dictionary<int, int>();
@@ -186,7 +165,7 @@ namespace csharp
         }
 
         [DebuggerDisplay("{BotNumber} ({Low.Target} {Low.Number}, {High.Target} {High.Number})")]
-        private class BotSpecification
+        public class BotSpecification
         {
             public int BotNumber { get; }
             public BotTransferSpecification Low { get; }
@@ -200,7 +179,7 @@ namespace csharp
             }
         }
 
-        private class BotTransferSpecification
+        public class BotTransferSpecification
         {
             public TransferTarget Target { get; }
             public int Number { get; }
@@ -212,14 +191,14 @@ namespace csharp
             }
         }
 
-        private enum TransferTarget
+        public enum TransferTarget
         {
             Bot,
             OutputBin
         }
 
         [DebuggerDisplay("{MicrochipValue} -> {BotNumber}")]
-        private class InputSpecification
+        public class InputSpecification
         {
             public int MicrochipValue { get; }
             public int BotNumber { get; }
@@ -231,7 +210,7 @@ namespace csharp
             }
         }
 
-        private class Bot
+        public class Bot
         {
             public int Number { get; }
             public IReadOnlyList<TransferDetail> TransferDetails { get; }
@@ -248,7 +227,7 @@ namespace csharp
             }
         }
 
-        private class TransferDetail
+        public class TransferDetail
         {
             public int MicrochipValue { get; }
             public TransferTarget TargetType { get; }

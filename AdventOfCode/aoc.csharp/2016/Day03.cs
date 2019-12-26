@@ -2,57 +2,34 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2016
 {
-    public class Day03
+    public class Day03 : ISolver
     {
-        private static readonly char[] Separator = {' '};
-
-        private readonly ITestOutputHelper _output;
-
-        public Day03(ITestOutputHelper output)
+        public (string Part1, string Part2) GetSolution(TextReader input)
         {
-            _output = output;
+            return GetAnswer(input);
         }
 
-        [Fact]
-        public void Part1()
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var input = GetPuzzleInput.Day(3);
-            var intStream = ReadLines(input).SelectMany(ToIntStream);
-            var validTriangles = ToTriangleLengths(intStream)
+            var intStream = Input.GetLines(input).SelectMany(ToIntStream);
+            var part1 = ToTriangleLengths(intStream)
                 .Where(IsValidTriangle)
                 .Count();
 
-            _output.WriteLine("{0}", validTriangles);
-        }
-
-        [Fact]
-        public void Part2()
-        {
-            var input = GetPuzzleInput.Day(3);
-            var intStream = ReadLines(input).SelectMany(ToIntStream);
             var transposedInput = TransposeRowsAndColumns(ToTriangleLengths(intStream));
-            var validTriangles = transposedInput
+            var part2 = transposedInput
                 .Where(IsValidTriangle)
                 .Count();
 
-            _output.WriteLine("{0}", validTriangles);
+            return (part1.ToString(), part2.ToString());
         }
 
-        private IEnumerable<string> ReadLines(TextReader input)
-        {
-            string line;
-            while ((line = input.ReadLine()) != null)
-            {
-                yield return line;
-            }
-        }
+        private static readonly char[] Separator = { ' ' };
 
-        private IEnumerable<int> ToIntStream(string line)
+        private static IEnumerable<int> ToIntStream(string line)
         {
             string[] split = line.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
             if (split.Length != 3)
@@ -65,7 +42,7 @@ namespace csharp
             yield return int.Parse(split[2]);
         }
 
-        private IEnumerable<Tuple<int,int,int>> ToTriangleLengths(IEnumerable<int> arg)
+        private static IEnumerable<Tuple<int, int, int>> ToTriangleLengths(IEnumerable<int> arg)
         {
             var ints = new List<int>(3);
 
@@ -86,14 +63,14 @@ namespace csharp
             }
         }
 
-        private bool IsValidTriangle(Tuple<int, int, int> lengths)
+        private static bool IsValidTriangle(Tuple<int, int, int> lengths)
         {
             return lengths.Item1 + lengths.Item2 > lengths.Item3
                    && lengths.Item1 + lengths.Item3 > lengths.Item2
                    && lengths.Item2 + lengths.Item3 > lengths.Item1;
         }
 
-        private IEnumerable<Tuple<int, int, int>> TransposeRowsAndColumns(IEnumerable<Tuple<int, int, int>> triangles)
+        private static IEnumerable<Tuple<int, int, int>> TransposeRowsAndColumns(IEnumerable<Tuple<int, int, int>> triangles)
         {
             var triplet = new List<Tuple<int, int, int>>(3);
 

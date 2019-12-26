@@ -1,57 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2016
 {
-    public class Day08
+    public class Day08 : ISolver
     {
-        private readonly ITestOutputHelper _output;
-
-        private static readonly Regex RectRegex = new Regex("^rect ([\\d]+)x([\\d]+)$");
-        private static readonly Regex RotateColumnRegex = new Regex("^rotate column x=([\\d]+) by ([\\d]+)$");
-        private static readonly Regex RotateRowRegex = new Regex("^rotate row y=([\\d]+) by ([\\d]+)$");
-
-        public Day08(ITestOutputHelper output)
+        public (string Part1, string Part2) GetSolution(TextReader input)
         {
-            _output = output;
+            return GetAnswer(input);
         }
 
-        [Fact]
-        public void SampleData()
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            string input = "rect 3x2\n" +
-                           "rotate column x=1 by 1\n" +
-                           "rotate row y=0 by 4\n" +
-                           "rotate column x=1 by 1\n";
-            List<IInstruction> instructions;
-            using (var reader = new StringReader(input))
-            {
-                instructions = ParseInstructions(reader);
-            }
-
-            var screen = new bool[7, 3];
-            InitialiseScreen(screen);
-
-            foreach (var instruction in instructions)
-            {
-                instruction.Execute(screen);
-            }
-
-            DisplayScreen(screen);
-        }
-
-        [Fact]
-        public void RealData()
-        {
-            List<IInstruction> instructions;
-            using (var reader = GetPuzzleInput.Day(8))
-            {
-                instructions = ParseInstructions(reader);
-            }
+            List<IInstruction> instructions = ParseInstructions(input);
 
             var screen = new bool[50, 6];
             InitialiseScreen(screen);
@@ -61,12 +25,17 @@ namespace csharp
                 instruction.Execute(screen);
             }
 
-            _output.WriteLine("Number of lights on {0}", CountOnLights(screen));
+            var part1 = CountOnLights(screen);
+            var part2 = DisplayScreen(screen);
 
-            DisplayScreen(screen);
+            return (part1.ToString(), part2);
         }
 
-        private int CountOnLights(bool[,] screen)
+        private static readonly Regex RectRegex = new Regex("^rect ([\\d]+)x([\\d]+)$");
+        private static readonly Regex RotateColumnRegex = new Regex("^rotate column x=([\\d]+) by ([\\d]+)$");
+        private static readonly Regex RotateRowRegex = new Regex("^rotate row y=([\\d]+) by ([\\d]+)$");
+
+        private static int CountOnLights(bool[,] screen)
         {
             int count = 0;
             int width = screen.GetLength(0);
@@ -86,23 +55,26 @@ namespace csharp
             return count;
         }
 
-        private void DisplayScreen(bool[,] screen)
+        public static string DisplayScreen(bool[,] screen)
         {
             int width = screen.GetLength(0);
             int height = screen.GetLength(1);
-            char[] row = new char[width];
+
+            var str = new StringBuilder();
 
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    row[x] = screen[x, y] ? '#' : ' ';
+                    str.Append(screen[x, y] ? '#' : ' ');
                 }
-                _output.WriteLine(new string(row));
+                str.AppendLine();
             }
+
+            return str.ToString();
         }
 
-        private void InitialiseScreen(bool[,] screen)
+        public static void InitialiseScreen(bool[,] screen)
         {
             int width = screen.GetLength(0);
             int height = screen.GetLength(1);
@@ -116,10 +88,10 @@ namespace csharp
             }
         }
 
-        private List<IInstruction> ParseInstructions(TextReader input)
+        public static List<IInstruction> ParseInstructions(TextReader input)
         {
             var instructions = new List<IInstruction>();
-            string line;
+            string? line;
 
             while ((line = input.ReadLine()) != null)
             {
@@ -151,7 +123,7 @@ namespace csharp
             return instructions;
         }
 
-        private interface IInstruction
+        public interface IInstruction
         {
             void Execute(bool[,] screen);
         }
@@ -212,7 +184,7 @@ namespace csharp
 
                 for (int y = 0; y < height; y++)
                 {
-                    screen[Column, (y + Amount)%height] = column[y];
+                    screen[Column, (y + Amount) % height] = column[y];
                 }
             }
         }
@@ -245,7 +217,7 @@ namespace csharp
 
                 for (int x = 0; x < width; x++)
                 {
-                    screen[(x + Amount)%width, Row] = row[x];
+                    screen[(x + Amount) % width, Row] = row[x];
                 }
             }
         }

@@ -1,80 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using Xunit;
-using Xunit.Abstractions;
+using System.IO;
 
-namespace csharp
+namespace aoc.csharp._2016
 {
-    public class Day07
+    public class Day07 : ISolver
     {
-        private readonly ITestOutputHelper _output;
-
-        public Day07(ITestOutputHelper output)
+        public (string Part1, string Part2) GetSolution(TextReader input)
         {
-            _output = output;
+            return GetAnswer(input);
         }
 
-        [Theory]
-        [InlineData("abba[mnop]qrst", true)]
-        [InlineData("abcd[bddb]xyyx", false)]
-        [InlineData("aaaa[qwer]tyui", false)]
-        [InlineData("ioxxoj[asdfgh]zxcvbn", true)]
-        public void Part1Samples(string input, bool expected)
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            bool actual = SupportsTls(input);
-            Assert.Equal(expected, actual);
-        }
-
-        [Fact]
-        public void Part1()
-        {
-            int count = 0;
-            using (var reader = GetPuzzleInput.Day(7))
+            int part1 = 0, part2 = 0;
+            string? line;
+            while ((line = input.ReadLine()) != null)
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                if (SupportsTls(line))
                 {
-                    if (SupportsTls(line))
-                    {
-                        count++;
-                    }
+                    part1++;
+                }
+                if (SupportsSsl(line))
+                {
+                    part2++;
                 }
             }
 
-            _output.WriteLine("{0}", count);
+            return (part1.ToString(), part2.ToString());
         }
 
-        [Theory]
-        [InlineData("aba[bab]xyz", true)]
-        [InlineData("xyx[xyx]xyx", false)]
-        [InlineData("aaa[kek]eke", true)]
-        [InlineData("zazbz[bzb]cdb", true)]
-        public void Part2Samples(string input, bool expected)
-        {
-            bool actual = SupportsSsl(input);
-            Assert.Equal(expected, actual);
-        }
-
-        [Fact]
-        public void Part2()
-        {
-            int count = 0;
-            using (var reader = GetPuzzleInput.Day(7))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    if (SupportsSsl(line))
-                    {
-                        count++;
-                    }
-                }
-            }
-
-            _output.WriteLine("{0}", count);
-        }
-
-        private bool SupportsTls(string input)
+        public static bool SupportsTls(string input)
         {
             var parsed = ParseIp(input);
             var ips = parsed.Item1;
@@ -105,7 +61,7 @@ namespace csharp
             return parsed;
         }
 
-        private bool ContainsAbba(List<string> inputs)
+        private static bool ContainsAbba(List<string> inputs)
         {
             foreach (var input in inputs)
             {
@@ -125,14 +81,14 @@ namespace csharp
             return false;
         }
 
-        private bool SupportsSsl(string input)
+        public static bool SupportsSsl(string input)
         {
             var parsed = ParseIp(input);
             var aba = FindAbaCandidates(parsed.Item1);
             var bab = FindAbaCandidates(parsed.Item2);
             foreach (var candidate in aba)
             {
-                var toFind = new string(new[] {candidate[1], candidate[0], candidate[1]});
+                var toFind = new string(new[] { candidate[1], candidate[0], candidate[1] });
                 if (bab.Contains(toFind))
                 {
                     return true;
@@ -141,7 +97,7 @@ namespace csharp
             return false;
         }
 
-        private List<string> FindAbaCandidates(List<string> parsed)
+        private static List<string> FindAbaCandidates(List<string> parsed)
         {
             var list = new List<string>();
             foreach (var part in parsed)

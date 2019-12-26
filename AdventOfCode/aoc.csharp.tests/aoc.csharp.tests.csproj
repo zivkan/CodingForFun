@@ -4,6 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <nullable>enable</nullable>
   </PropertyGroup>
 
   <ItemGroup>
