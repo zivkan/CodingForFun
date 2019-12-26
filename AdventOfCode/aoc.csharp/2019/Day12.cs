@@ -82,23 +82,36 @@ namespace aoc.csharp._2019
                 }
             } while (x == null || y == null || z == null);
 
-            var cycleLength = new[] { x.Value, y.Value, z.Value };
-            var steps = new long[] { cycleLength[0], cycleLength[1], cycleLength[2] };
+            var lcm = GetLowestCommonMultiple(x.Value, y.Value, z.Value);
 
-            while (steps[0] != steps[1] || steps[1] != steps[2])
+            return lcm;
+        }
+
+        private static long GetLowestCommonMultiple(int value1, int value2, int value3)
+        {
+            var lcm1 = GetLowestCommonMultiple(value1, value2);
+            var lcm2 = GetLowestCommonMultiple(lcm1, value3);
+            return lcm2;
+        }
+
+        private static long GetLowestCommonMultiple(long value1, long value2)
+        {
+            var v1 = value1;
+            var v2 = value2;
+
+            while (v1 != v2)
             {
-                var minIndex =
-                    steps[0] < steps[1]
-                    ? steps[0] < steps[2]
-                        ? 0
-                        : 2
-                    : steps[1] < steps[2]
-                        ? 1
-                        : 2;
-                steps[minIndex] += cycleLength[minIndex];
+                if (v1 < v2)
+                {
+                    v1 += value1;
+                }
+                else
+                {
+                    v2 += value2;
+                }
             }
 
-            return steps[0];
+            return v1;
         }
 
         public static int GetEnergy(Moons state)
