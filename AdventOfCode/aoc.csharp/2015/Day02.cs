@@ -1,61 +1,29 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using input;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2015
 {
-    public class Day02
+    public class Day02 : ISolver
     {
-        private ITestOutputHelper _output;
-        private string _input;
-
-        public Day02(ITestOutputHelper output)
+        public (string Part1, string Part2) GetSolution(TextReader input)
         {
-            _output = output;
-            _input = GetInput.Day(2);
+            return GetAnswer(input);
         }
 
-        [Theory]
-        [InlineData("2x3x4", 58)]
-        [InlineData("1x1x10", 43)]
-        public void Part1Sample(string input, int expected)
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            int area = CalculateRequiredArea(input);
-            Assert.Equal(expected, area);
+            var text = input.ReadToEnd();
+            var part1 = CalculateRequiredArea(text);
+            var part2 = CalculateRibbon(text);
+            return (part1.ToString(), part2.ToString());
         }
 
-        [Fact]
-        public void Part1()
-        {
-            int area = CalculateRequiredArea(_input);
-            _output.WriteLine("area = {0}", area);
-        }
-
-        [Theory]
-        [InlineData("2x3x4", 34)]
-        [InlineData("1x1x10", 14)]
-        public void Part2Sample(string input, int expected)
-        {
-            int area = CalculateRibbon(input);
-            Assert.Equal(expected, area);
-        }
-
-        [Fact]
-        public void Part2()
-        {
-            int area = CalculateRibbon(_input);
-            _output.WriteLine("area = {0}", area);
-        }
-
-        private int CalculateRequiredArea(string input)
+        public static int CalculateRequiredArea(string input)
         {
             int total = 0;
             using (var reader = new StringReader(input))
             {
-                string line;
+                string? line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     string[] split = line.Split('x');
@@ -71,12 +39,12 @@ namespace csharp
             return total;
         }
 
-        private int CalculateRibbon(string input)
+        public static int CalculateRibbon(string input)
         {
             int total = 0;
             using (var reader = new StringReader(input))
             {
-                string line;
+                string? line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     string[] split = line.Split('x');
