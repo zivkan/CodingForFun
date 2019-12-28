@@ -1,73 +1,27 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using input;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2018
 {
-    public class Day04
+    public class Day04 : ISolver
     {
-        private ITestOutputHelper _output;
-        private string _input;
-        private static readonly string _sampleInput =
-            "[1518-11-01 00:00] Guard #10 begins shift\n" +
-            "[1518-11-01 00:05] falls asleep\n" +
-            "[1518-11-01 00:25] wakes up\n" +
-            "[1518-11-01 00:30] falls asleep\n" +
-            "[1518-11-01 00:55] wakes up\n" +
-            "[1518-11-01 23:58] Guard #99 begins shift\n" +
-            "[1518-11-02 00:40] falls asleep\n" +
-            "[1518-11-02 00:50] wakes up\n" +
-            "[1518-11-03 00:05] Guard #10 begins shift\n" +
-            "[1518-11-03 00:24] falls asleep\n" +
-            "[1518-11-03 00:29] wakes up\n" +
-            "[1518-11-04 00:02] Guard #99 begins shift\n" +
-            "[1518-11-04 00:36] falls asleep\n" +
-            "[1518-11-04 00:46] wakes up\n" +
-            "[1518-11-05 00:03] Guard #99 begins shift\n" +
-            "[1518-11-05 00:45] falls asleep\n" +
-            "[1518-11-05 00:55] wakes up";
-
-
-        public Day04(ITestOutputHelper output)
+        public (string Part1, string Part2) GetSolution(TextReader input)
         {
-            _output = output;
-            _input = GetInput.Day(4);
+            return GetAnswer(input);
         }
 
-        [Fact]
-        public void Part1Sample()
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            long result = Part1Answer(_sampleInput);
-            Assert.Equal(240, result);
+            var text = input.ReadToEnd();
+            var part1 = Part1Answer(text);
+            var part2 = Part2Answer(text);
+            return (part1.ToString(), part2.ToString());
         }
 
-        [Fact]
-        public void Part1()
-        {
-            long result = Part1Answer(_input);
-            _output.WriteLine("{0}", result);
-        }
-
-        [Fact]
-        public void Part2Sample()
-        {
-            var result = Part2Answer(_sampleInput);
-            Assert.Equal(4455, result);
-        }
-
-        [Fact]
-        public void Part2()
-        {
-            var result = Part2Answer(_input);
-            _output.WriteLine("{0}", result);
-        }
-
-        private long Part1Answer(string input)
+        public static long Part1Answer(string input)
         {
             var lines = ParseLines(input);
             var naps = GetNaps(lines).ToList();
@@ -76,7 +30,7 @@ namespace csharp
             return (long)sleepiestGuard * (long)sleepiestTime;
         }
 
-        private long Part2Answer(string input)
+        public static long Part2Answer(string input)
         {
             var lines = ParseLines(input);
             var naps = GetNaps(lines).ToList();
@@ -93,12 +47,12 @@ namespace csharp
             return (long)result.Guard * (long)result.Minute;
         }
 
-        private List<LineInfo> ParseLines(string input)
+        private static List<LineInfo> ParseLines(string input)
         {
             List<LineInfo> lines = new List<LineInfo>();
             using (var reader = new StringReader(input))
             {
-                string line;
+                string? line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     int start = line.IndexOf('[');
@@ -143,37 +97,31 @@ namespace csharp
             return lines;
         }
 
-        private IEnumerable<Nap> GetNaps(List<LineInfo> lines)
+        private static IEnumerable<Nap> GetNaps(List<LineInfo> lines)
         {
             lines.Sort(new Comparison<LineInfo>((a, b) => Comparer<DateTime>.Default.Compare(a.DateTime, b.DateTime)));
             int guard = 0;
-            using (var enumerator = lines.GetEnumerator())
+            using var enumerator = lines.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                while (enumerator.MoveNext())
+                if (enumerator.Current.LineType == LineType.StartShift)
                 {
-                    if (enumerator.Current.LineType == LineType.StartShift)
+                    guard = enumerator.Current.Guard;
+                }
+                else if (enumerator.Current.LineType == LineType.FallAsleep)
+                {
+                    DateTime start = enumerator.Current.DateTime;
+                    if (enumerator.MoveNext())
                     {
-                        guard = enumerator.Current.Guard;
-                    }
-                    else if (enumerator.Current.LineType == LineType.FallAsleep)
-                    {
-                        DateTime start = enumerator.Current.DateTime;
-                        if (enumerator.MoveNext())
+                        if (enumerator.Current.LineType == LineType.WakeUp)
                         {
-                            if (enumerator.Current.LineType == LineType.WakeUp)
+                            DateTime end = enumerator.Current.DateTime;
+                            yield return new Nap
                             {
-                                DateTime end = enumerator.Current.DateTime;
-                                yield return new Nap
-                                {
-                                    Guard = guard,
-                                    Start = start,
-                                    End = end
-                                };
-                            }
-                            else
-                            {
-                                throw new Exception();
-                            }
+                                Guard = guard,
+                                Start = start,
+                                End = end
+                            };
                         }
                         else
                         {
@@ -185,16 +133,19 @@ namespace csharp
                         throw new Exception();
                     }
                 }
+                else
+                {
+                    throw new Exception();
+                }
             }
         }
 
-        private int FindSleepiestGuard(List<Nap> naps)
+        private static int FindSleepiestGuard(List<Nap> naps)
         {
             var guards = new Dictionary<int, TimeSpan>();
             foreach (var nap in naps)
             {
-                TimeSpan soFar;
-                if (!guards.TryGetValue(nap.Guard, out soFar))
+                if (!guards.TryGetValue(nap.Guard, out TimeSpan soFar))
                 {
                     soFar = TimeSpan.Zero;
                 }
@@ -223,7 +174,7 @@ namespace csharp
             return id;
         }
 
-        private (int minute, int times) FindSleepiestTime(int sleepiestGuard, List<Nap> naps)
+        private static (int minute, int times) FindSleepiestTime(int sleepiestGuard, List<Nap> naps)
         {
             var minutes = new Dictionary<int, int>();
             for (int minute = 0; minute < 60; minute++)
@@ -231,7 +182,7 @@ namespace csharp
                 minutes[minute] = 0;
             }
 
-            foreach (var nap in naps.Where(n=>n.Guard == sleepiestGuard))
+            foreach (var nap in naps.Where(n => n.Guard == sleepiestGuard))
             {
                 for (var time = nap.Start; time < nap.End; time = time.AddMinutes(1))
                 {
@@ -241,7 +192,7 @@ namespace csharp
 
             int max = 0;
             int min = -1;
-            foreach(var minute in minutes)
+            foreach (var minute in minutes)
             {
                 if (minute.Value > max)
                 {

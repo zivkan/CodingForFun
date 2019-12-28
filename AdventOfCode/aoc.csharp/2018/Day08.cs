@@ -1,63 +1,36 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using input;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2018
 {
-    public class Day08
+    public class Day08 : ISolver
     {
-        private ITestOutputHelper _output;
-        private string _input;
-        private static readonly string _sampleInput =
-            "2 3 0 3 10 11 12 1 1 0 1 99 2 1 1 2";
+        public (string Part1, string Part2) GetSolution(TextReader input)
+        {
+            return GetAnswer(input);
+        }
+
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
+        {
+            var text = input.ReadToEnd();
+            var part1 = GetSumOfMetadata(text);
+            var part2 = GetRootNodeValue(text);
+            return (part1.ToString(), part2.ToString());
+        }
+
         private static readonly Regex _regex = new Regex(@"(\d+)");
 
-        public Day08(ITestOutputHelper output)
-        {
-            _output = output;
-            _input = GetInput.Day(8);
-        }
-
-        [Fact]
-        public void Part1Sample()
-        {
-            var result = GetSumOfMetadata(_sampleInput);
-            Assert.Equal(138, result);
-        }
-
-        [Fact]
-        public void Part1()
-        {
-            var result = GetSumOfMetadata(_input);
-            _output.WriteLine("{0}", result);
-        }
-
-        [Fact]
-        public void Part2Sample()
-        {
-            var result = GetRootNodeValue(_sampleInput);
-            Assert.Equal(66, result);
-        }
-
-        [Fact]
-        public void Part2()
-        {
-            var result = GetRootNodeValue(_input);
-            _output.WriteLine("{0}", result);
-        }
-
-        private int GetSumOfMetadata(string input)
+        public static int GetSumOfMetadata(string input)
         {
             var tree = ParseTree(input);
             var stack = new Stack<Node>();
             stack.Push(tree);
             int sum = 0;
 
-            while (stack.TryPop(out Node node))
+            while (stack.TryPop(out Node? node))
             {
                 sum += node.Metadata.Sum();
                 foreach (var child in node.Children)
@@ -69,7 +42,7 @@ namespace csharp
             return sum;
         }
 
-        private int GetRootNodeValue(string input)
+        public static int GetRootNodeValue(string input)
         {
             var tree = ParseTree(input);
 
@@ -77,7 +50,7 @@ namespace csharp
             return result;
         }
 
-        private int GetNodeValue(Node node)
+        private static int GetNodeValue(Node node)
         {
             if (node.Children.Count == 0)
             {
@@ -92,7 +65,7 @@ namespace csharp
                 }
 
                 int sum = 0;
-                foreach(var m in node.Metadata)
+                foreach (var m in node.Metadata)
                 {
                     if (m > 0 && m <= childrenValues.Length)
                     {
@@ -104,17 +77,15 @@ namespace csharp
             }
         }
 
-        private Node ParseTree(string input)
+        private static Node ParseTree(string input)
         {
-            using (var enumerator = GetIntStream(input).GetEnumerator())
-            {
-                var result = ParseTree(enumerator);
-                if (enumerator.MoveNext()) throw new Exception();
-                return result;
-            }
+            using var enumerator = GetIntStream(input).GetEnumerator();
+            var result = ParseTree(enumerator);
+            if (enumerator.MoveNext()) throw new Exception();
+            return result;
         }
 
-        private Node ParseTree(IEnumerator<int> enumerator)
+        private static Node ParseTree(IEnumerator<int> enumerator)
         {
             if (!enumerator.MoveNext()) throw new Exception();
             int numChildren = enumerator.Current;
@@ -137,11 +108,12 @@ namespace csharp
             return node;
         }
 
-        private IEnumerable<int> GetIntStream(string input)
+        private static IEnumerable<int> GetIntStream(string input)
         {
             var results = _regex.Matches(input);
-            foreach (Match result in results)
+            foreach (Match? result in results)
             {
+                if (result == null) throw new Exception();
                 var str = result.Captures[0].Value;
                 int i = int.Parse(str);
                 yield return i;

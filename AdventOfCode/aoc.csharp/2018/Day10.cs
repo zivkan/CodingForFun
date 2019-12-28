@@ -1,88 +1,33 @@
+﻿using System.IO;
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
-using input;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2018
 {
-    public class Day10
+    public class Day10 : ISolver
     {
-        private ITestOutputHelper _output;
-        private string _input;
+        public (string Part1, string Part2) GetSolution(TextReader input)
+        {
+            return GetAnswer(input);
+        }
+
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
+        {
+            var text = input.ReadToEnd();
+            var (message, seconds) = FindMessage(text);
+            return (message, seconds.ToString());
+        }
+
         private static readonly Regex _regex = new Regex(@"position=<\s*(?<px>-?\d+),\s*(?<py>-?\d+)> velocity=<\s*(?<vx>-?\d+),\s*(?<vy>-?\d+)>");
-        private static readonly string _sampleInput = @"position=< 9,  1> velocity=< 0,  2>
-position=< 7,  0> velocity=<-1,  0>
-position=< 3, -2> velocity=<-1,  1>
-position=< 6, 10> velocity=<-2, -1>
-position=< 2, -4> velocity=< 2,  2>
-position=<-6, 10> velocity=< 2, -2>
-position=< 1,  8> velocity=< 1, -1>
-position=< 1,  7> velocity=< 1,  0>
-position=<-3, 11> velocity=< 1, -2>
-position=< 7,  6> velocity=<-1, -1>
-position=<-2,  3> velocity=< 1,  0>
-position=<-4,  3> velocity=< 2,  0>
-position=<10, -3> velocity=<-1,  1>
-position=< 5, 11> velocity=< 1, -2>
-position=< 4,  7> velocity=< 0, -1>
-position=< 8, -2> velocity=< 0,  1>
-position=<15,  0> velocity=<-2,  0>
-position=< 1,  6> velocity=< 1,  0>
-position=< 8,  9> velocity=< 0, -1>
-position=< 3,  3> velocity=<-1,  1>
-position=< 0,  5> velocity=< 0, -1>
-position=<-2,  2> velocity=< 2,  0>
-position=< 5, -2> velocity=< 1,  2>
-position=< 1,  4> velocity=< 2,  1>
-position=<-2,  7> velocity=< 2, -2>
-position=< 3,  6> velocity=<-1, -1>
-position=< 5,  0> velocity=< 1,  0>
-position=<-6,  0> velocity=< 2,  0>
-position=< 5,  9> velocity=< 1, -2>
-position=<14,  7> velocity=<-2,  0>
-position=<-3,  6> velocity=< 2, -1>";
 
-        public Day10(ITestOutputHelper output)
-        {
-            _output = output;
-            _input = GetInput.Day(10);
-        }
-
-        [Fact]
-        public void Part1Sample()
-        {
-            var result = FindMessage(_sampleInput);
-            var expected = new StringBuilder();
-            expected.AppendLine("#...#..###");
-            expected.AppendLine("#...#...#.");
-            expected.AppendLine("#...#...#.");
-            expected.AppendLine("#####...#.");
-            expected.AppendLine("#...#...#.");
-            expected.AppendLine("#...#...#.");
-            expected.AppendLine("#...#...#.");
-            expected.AppendLine("#...#..###");
-            Assert.Equal(expected.ToString(), result.message);
-            Assert.Equal(3, result.seconds);
-        }
-
-        [Fact]
-        public void Part1()
-        {
-            var result = FindMessage(_input);
-            _output.WriteLine($"Result after {result.seconds} seconds");
-            _output.WriteLine("{0}", result.message);
-        }
-
-        private (string message, int seconds) FindMessage(string input)
+        public static (string message, int seconds) FindMessage(string input)
         {
             var (positions, velocities) = ParseInput(input);
             long volume = GetVolume(positions);
             long newVolume = volume;
             var newPositions = positions;
             int iteration = 0;
-            string message;
             do
             {
                 iteration++;
@@ -91,18 +36,13 @@ position=<-3,  6> velocity=< 2, -1>";
 
                 newPositions = Increment(positions, velocities);
                 newVolume = GetVolume(newPositions);
-                if (volume < 100000)
-                {
-                    message = GenerateResult(newPositions);
-                }
-
             } while (newVolume < volume);
 
             var result = GenerateResult(positions);
             return (result, iteration - 1);
         }
 
-        private string GenerateResult(Vector<int>[] positions)
+        private static string GenerateResult(Vector<int>[] positions)
         {
             int left = int.MaxValue;
             int right = int.MinValue;
@@ -131,7 +71,7 @@ position=<-3,  6> velocity=< 2, -1>";
                 }
             }
 
-            foreach(var p in positions)
+            foreach (var p in positions)
             {
                 int x = p[0] - left;
                 int y = p[1] - top;
@@ -148,7 +88,7 @@ position=<-3,  6> velocity=< 2, -1>";
             return sb.ToString();
         }
 
-        private long GetVolume(Vector<int>[] positions)
+        private static long GetVolume(Vector<int>[] positions)
         {
             int left = int.MaxValue;
             int right = int.MinValue;
@@ -171,7 +111,7 @@ position=<-3,  6> velocity=< 2, -1>";
             return width * height;
         }
 
-        private Vector<int>[] Increment(Vector<int>[] positions, Vector<int>[] velocities)
+        private static Vector<int>[] Increment(Vector<int>[] positions, Vector<int>[] velocities)
         {
             var newPositions = new Vector<int>[positions.Length];
 
@@ -183,7 +123,7 @@ position=<-3,  6> velocity=< 2, -1>";
             return newPositions;
         }
 
-        private (Vector<int>[] positions, Vector<int>[] velocities) ParseInput(string input)
+        private static (Vector<int>[] positions, Vector<int>[] velocities) ParseInput(string input)
         {
             var matches = _regex.Matches(input);
             var positions = new Vector<int>[matches.Count];

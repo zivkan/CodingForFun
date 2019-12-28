@@ -1,59 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using input;
-using Xunit;
-using Xunit.Abstractions;
+using System.IO;
 
-namespace csharp
+namespace aoc.csharp._2018
 {
-    public class Day14
+    public class Day14 : ISolver
     {
-        private readonly ITestOutputHelper _output;
-        private readonly static string _input = GetInput.Day(14);
-
-        public Day14(ITestOutputHelper output)
+        public (string Part1, string Part2) GetSolution(TextReader input)
         {
-            _output = output;
+            return GetAnswer(input);
         }
 
-        [Theory]
-        [InlineData(9, "5158916779")]
-        [InlineData(5, "0124515891")]
-        [InlineData(18, "9251071085")]
-        [InlineData(2018, "5941429882")]
-        public void Part1Sample(int iterations, string expected)
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var score = GetScore(iterations);
-            Assert.Equal(expected, score);
+            var text = input.ReadToEnd();
+            var iterations = int.Parse(text);
+            var part1 = GetScore(iterations);
+            var part2 = GetIterations(text);
+
+            return (part1, part2.ToString());
         }
 
-        [Fact]
-        public void Part1()
-        {
-            var iterations = int.Parse(_input);
-            var score = GetScore(iterations);
-            Assert.Equal("3147574107", score);
-        }
-
-        [Theory]
-        [InlineData("51589", 9)]
-        [InlineData("01245", 5)]
-        [InlineData("92510", 18)]
-        [InlineData("59414", 2018)]
-        public void Part2Sample(string input, int expected)
-        {
-            var iterations = GetIterations(input);
-            Assert.Equal(expected, iterations);
-        }
-
-        [Fact]
-        public void Part2()
-        {
-            var iterations = GetIterations(_input);
-            Assert.Equal(20280190, iterations);
-        }
-
-        private string GetScore(int iterations)
+        public static string GetScore(int iterations)
         {
             var recipes = new List<byte>() { 3, 7 };
             var elves = new[] { 0, 1 };
@@ -74,7 +42,7 @@ namespace csharp
             return new string(str);
         }
 
-        private int GetIterations(string input)
+        public static int GetIterations(string input)
         {
             var recipes = new List<byte>() { 3, 7 };
             var elves = new[] { 0, 1 };
@@ -101,7 +69,7 @@ namespace csharp
             throw new Exception("infinite loop");
         }
 
-        private void NextRecipe(List<byte> recipes, int[] elves)
+        private static void NextRecipe(List<byte> recipes, int[] elves)
         {
             var newRecipe = recipes[elves[0]] + recipes[elves[1]];
             if (newRecipe >= 10)

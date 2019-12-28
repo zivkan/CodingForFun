@@ -1,60 +1,26 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using input;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2018
 {
-    public class Day06
+    public class Day06 : ISolver
     {
-        private ITestOutputHelper _output;
-        private string _input;
-        private static readonly string _sampleInput = 
-            "1, 1\n" +
-            "1, 6\n" +
-            "8, 3\n" +
-            "3, 4\n" +
-            "5, 5\n" +
-            "8, 9";
-
-        public Day06(ITestOutputHelper output)
+        public (string Part1, string Part2) GetSolution(TextReader input)
         {
-            _output = output;
-            _input = GetInput.Day(6);
+            return GetAnswer(input);
         }
 
-        [Fact]
-        public void Part1Sample()
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var result = FindLargestArea(_sampleInput);
-            Assert.Equal(17, result);
+            var text = input.ReadToEnd();
+            var part1 = FindLargestArea(text);
+            var part2 = SizeOfTargetArea(text, 10000);
+            return (part1.ToString(), part2.ToString());
         }
 
-        [Fact]
-        public void Part1()
-        {
-            var result = FindLargestArea(_input);
-            _output.WriteLine("{0}", result);
-        }
-
-        [Fact]
-        public void Part2Sample()
-        {
-            var result = SizeOfTargetArea(_sampleInput, 32);
-            Assert.Equal(16, result);
-        }
-
-        [Fact]
-        public void Part2()
-        {
-            var result = SizeOfTargetArea(_input, 10000);
-            _output.WriteLine("{0}", result);
-        }
-
-        private int FindLargestArea(string input)
+        public static int FindLargestArea(string input)
         {
             var points = ParsePoints(input);
             var grid = CreateGrid(points);
@@ -63,7 +29,7 @@ namespace csharp
             return areas.Max(a => a.Value);
         }
 
-        private int SizeOfTargetArea(string input, int threshold)
+        public static int SizeOfTargetArea(string input, int threshold)
         {
             var points = ParsePoints(input);
             var grid = CreateGrid(points);
@@ -81,7 +47,7 @@ namespace csharp
             return count;
         }
 
-        private Dictionary<int, int> GetAreaPerId(int[,] grid)
+        private static Dictionary<int, int> GetAreaPerId(int[,] grid)
         {
             var areas = new Dictionary<int, int>();
 
@@ -124,7 +90,7 @@ namespace csharp
             return areas;
         }
 
-        private void FillGridWithClosestId(int[,] grid, List<Point> points)
+        private static void FillGridWithClosestId(int[,] grid, List<Point> points)
         {
             var maxY = grid.GetUpperBound(1);
             var maxX = grid.GetUpperBound(0);
@@ -155,7 +121,7 @@ namespace csharp
             }
         }
 
-        private void FillGridWithTotalManhattenDistance(int[,] grid, List<Point> points)
+        private static void FillGridWithTotalManhattenDistance(int[,] grid, List<Point> points)
         {
             var maxY = grid.GetUpperBound(1);
             var maxX = grid.GetUpperBound(0);
@@ -177,7 +143,7 @@ namespace csharp
             }
         }
 
-        private int[,] CreateGrid(List<Point> points)
+        private static int[,] CreateGrid(List<Point> points)
         {
             int minX = points.Min(p => p.X);
             int minY = points.Min(p => p.Y);
@@ -191,13 +157,13 @@ namespace csharp
             return grid;
         }
 
-        private List<Point> ParsePoints(string input)
+        private static List<Point> ParsePoints(string input)
         {
             var points = new List<Point>();
 
             using (var reader = new StringReader(input))
             {
-                string line;
+                string? line;
                 int id = 1;
                 while ((line = reader.ReadLine()) != null)
                 {

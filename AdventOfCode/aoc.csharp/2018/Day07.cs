@@ -1,64 +1,27 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using input;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2018
 {
-    public class Day07
+    public class Day07 : ISolver
     {
-        private ITestOutputHelper _output;
-        private string _input;
-        private static readonly string _sampleInput =
-            "Step C must be finished before step A can begin.\n" +
-            "Step C must be finished before step F can begin.\n" +
-            "Step A must be finished before step B can begin.\n" +
-            "Step A must be finished before step D can begin.\n" +
-            "Step B must be finished before step E can begin.\n" +
-            "Step D must be finished before step E can begin.\n" +
-            "Step F must be finished before step E can begin.";
-
-        public Day07(ITestOutputHelper output)
+        public (string Part1, string Part2) GetSolution(TextReader input)
         {
-            _output = output;
-            _input = GetInput.Day(7);
+            return GetAnswer(input);
         }
 
-        [Fact]
-        public void Part1Sample()
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var result = GetOrder(_sampleInput, 1, 0);
-            Assert.Equal("CABDFE", result.order);
+            var text = input.ReadToEnd();
+            (var part1, _) = GetOrder(text, 1, 0);
+            (_, var part2)= GetOrder(text, 5, 60);
+            return (part1, part2.ToString());
         }
 
-        [Fact]
-        public void Part1()
-        {
-            var result = GetOrder(_input, 1, 0);
-            _output.WriteLine("{0}", result.order);
-        }
-
-        [Fact]
-        public void Part2Sample()
-        {
-            var result = GetOrder(_sampleInput, 2, 0);
-            Assert.Equal("CABFDE", result.order);
-            Assert.Equal(15, result.elapsedTime);
-        }
-
-        [Fact]
-        public void Part2()
-        {
-            var result = GetOrder(_input, 5, 60);
-            _output.WriteLine("{0}", result.elapsedTime);
-        }
-
-
-        private (string order, int elapsedTime) GetOrder(string input, int numWorkers, int timeOverhead)
+        public static (string order, int elapsedTime) GetOrder(string input, int numWorkers, int timeOverhead)
         {
             var steps = ParseSteps(input);
             var scheduler = new Scheduler(steps);
@@ -134,26 +97,27 @@ namespace csharp
             return (result.ToString(), elapsedTime - 1);
         }
 
-        private List<(char Id, HashSet<char> Dependencies)> ParseSteps(string input)
+        private static List<(char Id, HashSet<char> Dependencies)> ParseSteps(string input)
         {
             var result = new Dictionary<char, HashSet<char>>();
             using (var reader = new StringReader(input))
             {
-                string line;
+                string? line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     char dependency = line[5];
                     char stepId = line[36];
 
-                    HashSet<char> dependencies;
-                    if (result.TryGetValue(stepId, out dependencies))
+                    if (result.TryGetValue(stepId, out HashSet<char>? dependencies))
                     {
                         dependencies.Add(dependency);
                     }
                     else
                     {
-                        dependencies = new HashSet<char>();
-                        dependencies.Add(dependency);
+                        dependencies = new HashSet<char>
+                        {
+                            dependency
+                        };
                         result.Add(stepId, dependencies);
                     }
 
@@ -169,7 +133,7 @@ namespace csharp
 
         private class Scheduler
         {
-            private List<(char Id, HashSet<char> Dependencies)> _state;
+            private readonly List<(char Id, HashSet<char> Dependencies)> _state;
 
             public Scheduler(List<(char Id, HashSet<char> Dependencies)> initialState)
             {

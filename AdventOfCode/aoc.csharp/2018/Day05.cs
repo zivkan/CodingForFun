@@ -1,54 +1,24 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using input;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2018
 {
-    public class Day05
+    public class Day05 : ISolver
     {
-        private ITestOutputHelper _output;
-        private string _input;
-        private static readonly string _sampleInput = "dabAcCaCBAcCcaDA";
-
-        public Day05(ITestOutputHelper output)
+        public (string Part1, string Part2) GetSolution(TextReader input)
         {
-            _output = output;
-            _input = GetInput.Day(5);
+            return GetAnswer(input);
         }
 
-        [Fact]
-        public void Part1Sample()
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var result = React(_sampleInput);
-            Assert.Equal(10, result.Length);
+            var text = input.ReadToEnd();
+            var part1 = React(text);
+            var part2 = BestReaction(text);
+            return (part1.Length.ToString(), part2.Length.ToString());
         }
 
-        [Fact]
-        public void Part1()
-        {
-            var result = React(_input);
-            _output.WriteLine("{0}", result.Length);
-        }
-
-        [Fact]
-        public void Part2Sample()
-        {
-            var result = BestReaction(_sampleInput);
-            Assert.Equal(4, result.Length);
-        }
-
-        [Fact]
-        public void Part2()
-        {
-            var result = BestReaction(_input);
-            _output.WriteLine("{0}", result.Length);
-        }
-
-        private string React(string input)
+        public static string React(string input)
         {
             var reactions = new List<string>();
             var polymers = new char[2];
@@ -76,7 +46,7 @@ namespace csharp
             return result;
         }
 
-        private string BestReaction(string input)
+        public static string BestReaction(string input)
         {
             string best = input;
             char[] chars = new char[1];

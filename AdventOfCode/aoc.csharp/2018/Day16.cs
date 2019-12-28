@@ -3,49 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using input;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace csharp
+namespace aoc.csharp._2018
 {
-    public class Day16
+    public class Day16 : ISolver
     {
-        private readonly ITestOutputHelper _output;
-        private readonly static string _input = GetInput.Day(16);
-        private readonly static Regex _beforeRegex = new Regex(@"Before: \[(\d+), (\d+), (\d+), (\d+)\]");
-        private readonly static Regex _instRegex = new Regex(@"(\d+) (\d+) (\d+) (\d+)");
-        private readonly static Regex _afterRegex = new Regex(@"After:  \[(\d+), (\d+), (\d+), (\d+)\]");
-        private readonly static Dictionary<string, Action<Instruction, int[]>> _instructions = GetInstructions();
-
-        public Day16(ITestOutputHelper output)
+        public (string Part1, string Part2) GetSolution(TextReader input)
         {
-            _output = output;
+            return GetAnswer(input);
         }
 
-        [Fact]
-        public void Samples()
+        public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var input = new Sample(
-                new Instruction(9, 2, 1, 2),
-                new List<int> { 3, 2, 1, 1 },
-                new List<int> { 3, 2, 2, 1 }
-                );
-            var result = Possibilities(input);
-
-            Assert.Equal(3, result.Count);
-            Assert.Contains("mulr", result);
-            Assert.Contains("addi", result);
-            Assert.Contains("seti", result);
-        }
-
-        [Fact]
-        public void Parts()
-        {
-            var (samples, program) = ParseInput(_input);
+            var (samples, program) = ParseInput(input);
             var results = samples.Select(s => new KeyValuePair<Sample, HashSet<string>>(s, Possibilities(s))).ToList();
-            Assert.Equal(677, results.Count(r => r.Value.Count >= 3));
-            _output.WriteLine("Part 1 = " + results.Count(r => r.Value.Count >= 3));
+            var part1 = results.Count(r => r.Value.Count >= 3);
 
             var mapping = GetInstructionMapping(results);
 
@@ -57,53 +29,56 @@ namespace csharp
                 _instructions[opCodeName](instruction, registers);
             }
 
-            Assert.Equal(540, registers[0]);
-            _output.WriteLine("Part 2 = " + registers[0]);
+            var part2 = registers[0];
+
+            return (part1.ToString(), part2.ToString());
         }
 
-        private (List<Sample>, List<Instruction>) ParseInput(string input)
+        private readonly static Regex _beforeRegex = new Regex(@"Before: \[(\d+), (\d+), (\d+), (\d+)\]");
+        private readonly static Regex _instRegex = new Regex(@"(\d+) (\d+) (\d+) (\d+)");
+        private readonly static Regex _afterRegex = new Regex(@"After:  \[(\d+), (\d+), (\d+), (\d+)\]");
+        private readonly static Dictionary<string, Action<Instruction, int[]>> _instructions = GetInstructions();
+
+        private static (List<Sample>, List<Instruction>) ParseInput(TextReader reader)
         {
             var samples = new List<Sample>();
             var instructions = new List<Instruction>();
 
-            using (var reader = new StringReader(input))
+            string? line;
+            while (!string.IsNullOrEmpty(line = reader.ReadLine()))
             {
-                string line;
-                while (!string.IsNullOrEmpty(line = reader.ReadLine()))
-                {
-                    var match = _beforeRegex.Match(line);
-                    if (!match.Success) throw new Exception("doesn't match before regex");
-                    var before = new[] { int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value) };
-                    line = reader.ReadLine();
-                    match = _instRegex.Match(line);
-                    if (!match.Success) throw new Exception("doesn't match instr regex");
-                    var instr = new Instruction(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value));
-                    line = reader.ReadLine();
-                    match = _afterRegex.Match(line);
-                    if (!match.Success) throw new Exception("doesn't match after regex");
-                    var after = new int[] { int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value) };
-                    line = reader.ReadLine();
+                var match = _beforeRegex.Match(line);
+                if (!match.Success) throw new Exception("doesn't match before regex");
+                var before = new[] { int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value) };
+                line = reader.ReadLine();
+                match = _instRegex.Match(line);
+                if (!match.Success) throw new Exception("doesn't match instr regex");
+                var instr = new Instruction(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value));
+                line = reader.ReadLine();
+                match = _afterRegex.Match(line);
+                if (!match.Success) throw new Exception("doesn't match after regex");
+                var after = new int[] { int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value) };
+                _ = reader.ReadLine();
 
-                    var sample = new Sample(instr, Array.AsReadOnly(before), Array.AsReadOnly(after));
-                    samples.Add(sample);
-                }
+                var sample = new Sample(instr, Array.AsReadOnly(before), Array.AsReadOnly(after));
+                samples.Add(sample);
+            }
 
-                while (string.IsNullOrEmpty(line)) line = reader.ReadLine();
+            while (string.IsNullOrEmpty(line)) line = reader.ReadLine();
 
 
-                while ((line = reader.ReadLine()) != null)
-                {
-                    var match = _instRegex.Match(line);
-                    if (!match.Success) throw new Exception("bad instruction");
-                    var instr = new Instruction(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value));
-                    instructions.Add(instr);
-                }
+            while ((line = reader.ReadLine()) != null)
+            {
+                var match = _instRegex.Match(line);
+                if (!match.Success) throw new Exception("bad instruction");
+                var instr = new Instruction(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value));
+                instructions.Add(instr);
             }
 
             return (samples, instructions);
         }
 
-        private HashSet<string> Possibilities(Sample input)
+        public static HashSet<string> Possibilities(Sample input)
         {
             var possibilities = new HashSet<string>();
 
@@ -124,7 +99,7 @@ namespace csharp
             return possibilities;
         }
 
-        private Dictionary<int, string> GetInstructionMapping(List<KeyValuePair<Sample, HashSet<string>>> results)
+        private static Dictionary<int, string> GetInstructionMapping(List<KeyValuePair<Sample, HashSet<string>>> results)
         {
             var opcodes = _instructions.Keys.ToList();
 
@@ -197,7 +172,7 @@ namespace csharp
             return result;
         }
 
-        private class Instruction
+        public class Instruction
         {
             public int Opcode { get; }
             public int A { get; }
@@ -213,7 +188,7 @@ namespace csharp
             }
         }
 
-        private class Sample
+        public class Sample
         {
             public Instruction Instruction { get; }
             public IReadOnlyList<int> Before { get; }
