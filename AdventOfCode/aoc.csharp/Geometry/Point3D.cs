@@ -63,5 +63,10 @@ namespace aoc.csharp.Geometry
         {
             return Point3DComparer.Instance.GetHashCode(this);
         }
+
+        internal uint GetManhattenDistance()
+        {
+            return (uint)Math.Abs(X) + (uint)Math.Abs(Y) + (uint)Math.Abs(Z);
+        }
     }
 }
