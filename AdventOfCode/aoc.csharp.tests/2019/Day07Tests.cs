@@ -1,6 +1,4 @@
 ﻿using aoc.csharp._2019;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace aoc.csharp.tests._2019
@@ -15,24 +13,6 @@ namespace aoc.csharp.tests._2019
 
             Assert.Equal("298586", part1);
             Assert.Equal("9246095", part2);
-        }
-
-        [Fact]
-        public void GetPermutationsTest()
-        {
-            var expected = new List<int[]>()
-            {
-                new [] { 0, 1, 2 },
-                new [] { 0, 2, 1 },
-                new [] { 1, 0, 2 },
-                new [] { 1, 2, 0 },
-                new [] { 2, 0, 1 },
-                new [] { 2, 1, 0 }
-            };
-
-            var actual = Day07.GetPermutations(expected[0]).ToList();
-
-            Assert.Equal(expected, actual);
         }
 
         [Theory]

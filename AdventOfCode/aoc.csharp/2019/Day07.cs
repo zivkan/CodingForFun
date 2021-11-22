@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace aoc.csharp._2019
 {
@@ -24,13 +25,13 @@ namespace aoc.csharp._2019
             long max = 0;
             long[]? phaseConfiguration = null;
 
-            foreach (var phase in GetPermutations(phases))
+            foreach (var phase in Permutations.Generate(phases))
             {
                 var output = RunAmps(program, phase);
                 if (output > max)
                 {
                     max = output;
-                    phaseConfiguration = phase;
+                    phaseConfiguration = phase.ToArray();
                 }
             }
 
@@ -42,9 +43,9 @@ namespace aoc.csharp._2019
             return (max, phaseConfiguration);
         }
 
-        private static long RunAmps(long[]  program, long[] phase)
+        private static long RunAmps(long[]  program, IReadOnlyList<long> phase)
         {
-            var amps = new IntcodeVm[phase.Length];
+            var amps = new IntcodeVm[phase.Count];
             int amp;
             for (amp = 0; amp < amps.Length; amp++)
             {
@@ -83,64 +84,6 @@ namespace aoc.csharp._2019
             }
 
             return thrust.Value;
-        }
-
-        public static IEnumerable<T[]> GetPermutations<T>(T[] collection)
-        {
-            var indexes = new int[collection.Length];
-            for (int i = 0; i < indexes.Length; i++)
-            {
-                indexes[i] = i;
-            }
-
-            yield return collection;
-
-            while (true)
-            {
-                for (int i = indexes.Length - 1; i >= 0; i--)
-                {
-                    var value = ++indexes[i];
-                    if (value < indexes.Length)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        if (i > 0)
-                        {
-                            indexes[i] = 0;
-                        }
-                        else
-                        {
-                            yield break;
-                        }
-                    }
-                }
-
-                bool valid = true;
-                for (int i = 1; valid && i < indexes.Length; i++)
-                {
-                    var value = indexes[i];
-                    for (int j = 0; j < i; j++)
-                    {
-                        if (indexes[j] == value)
-                        {
-                            valid = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (valid)
-                {
-                    var value = new T[indexes.Length];
-                    for (int i = 0; i < indexes.Length; i++)
-                    {
-                        value[i] = collection[indexes[i]];
-                    }
-                    yield return value;
-                }
-            }
         }
     }
 }
