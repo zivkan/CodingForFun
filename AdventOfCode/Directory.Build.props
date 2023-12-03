@@ -1,0 +1,7 @@
+<Project>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+		<nullable>enable</nullable>
+	</PropertyGroup>
+</Project>

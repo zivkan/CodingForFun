@@ -293,8 +293,21 @@ namespace aoc.csharp._2018
         {
             private static readonly IComparer<int> _intComparer = Comparer<int>.Default;
 
-            public int Compare(Cart a, Cart b)
+            public int Compare(Cart? a, Cart? b)
             {
+                if (a is null && b is null)
+                {
+                    return 0;
+                }
+                else if (a is null)
+                {
+                    return -1;
+                }
+                else if (b is null)
+                {
+                    return 1;
+                }
+
                 var result = _intComparer.Compare(a.Y, b.Y);
                 if (result == 0)
                 {

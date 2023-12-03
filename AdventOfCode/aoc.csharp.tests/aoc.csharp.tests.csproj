@@ -1,12 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <nullable>enable</nullable>
   </PropertyGroup>
 
   <ItemGroup>
