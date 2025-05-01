@@ -1,5 +1,6 @@
 ﻿using aoc.csharp._2016;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace aoc.csharp.tests._2016
@@ -7,9 +8,9 @@ namespace aoc.csharp.tests._2016
     public class Day02Tests
     {
         [Fact]
-        public void Answer()
+        public async Task Answer()
         {
-            using var input = Input.Get(2016, 02);
+            using var input = await Input.GetAsync(2016, 02);
             var (part1, part2) = Day02.GetAnswer(input);
 
             Assert.Equal("65556", part1);

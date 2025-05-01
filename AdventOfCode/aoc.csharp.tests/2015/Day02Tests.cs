@@ -1,14 +1,15 @@
 ﻿using aoc.csharp._2015;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace aoc.csharp.tests._2015
 {
     public class Day02Tests
     {
         [Fact]
-        public void Answer()
+        public async Task Answer()
         {
-            using var input = Input.Get(2015, 02);
+            using var input = await Input.GetAsync(2015, 02);
             var (part1, part2) = Day02.GetAnswer(input);
 
             Assert.Equal("1606483", part1);

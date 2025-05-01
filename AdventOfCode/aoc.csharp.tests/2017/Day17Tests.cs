@@ -1,4 +1,5 @@
 ﻿using aoc.csharp._2017;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace aoc.csharp.tests._2017
@@ -6,9 +7,9 @@ namespace aoc.csharp.tests._2017
     public class Day17Tests
     {
         [Fact]
-        public void Answer()
+        public async Task Answer()
         {
-            using var input = Input.Get(2017, 17);
+            using var input = await Input.GetAsync(2017, 17);
             var (part1, part2) = Day17.GetAnswer(input);
 
             Assert.Equal("1311", part1);
