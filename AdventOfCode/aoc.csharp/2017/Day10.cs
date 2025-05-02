@@ -13,7 +13,7 @@ namespace aoc.csharp._2017
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var text = input.ReadToEnd();
+            var text = input.ReadLine();
             var list = GetResult(256, text);
             int part1 = list[0] * list[1];
             string part2 = KnotHash(text);

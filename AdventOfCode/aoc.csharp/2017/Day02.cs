@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace aoc.csharp._2017
 {
@@ -14,23 +13,53 @@ namespace aoc.csharp._2017
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
             var text = input.ReadToEnd();
-            int part1 = CalcPart1(text);
-            int part2 = CalcPart2(text);
+
+            var line = new List<int>();
+            var lines = new List<int[]>();
+            int current = 0;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] == '\n' || text[i] == '\r')
+                {
+                    if (text[i] == '\r' && i + 1 < text.Length && text[i + 1] == '\n')
+                    {
+                        i++;
+                    }
+                    line.Add(current);
+                    current = 0;
+                    lines.Add(line.ToArray());
+                    line.Clear();
+                }
+                else if (text[i] == '\t')
+                {
+                    line.Add(current);
+                    current = 0;
+                }
+                else
+                {
+                    current = current * 10 + (text[i] - '0');
+                }
+            }
+
+            var data = lines.ToArray();
+
+            int part1 = CalcPart1(data);
+            int part2 = CalcPart2(data);
             return (part1.ToString(), part2.ToString());
         }
 
-        public static int CalcPart1(string input)
+        public static int CalcPart1(int[][] input)
         {
-            string[] lines = input.Split('\n');
             int checksum = 0;
-            foreach (string line in lines)
+            for (int row = 0; row < input.Length; row++)
             {
-                string[] cells = line.Split('\t');
-                int min = int.Parse(cells[0]);
-                int max = int.Parse(cells[0]);
-                for (int i = 1; i < cells.Length; i++)
+                int[] line = input[row];
+                int min = line[0];
+                int max = min;
+                for (int col = 1; col < line.Length; col++)
                 {
-                    int num = int.Parse(cells[i]);
+                    int num = line[col];
                     if (num > max)
                     {
                         max = num;
@@ -47,27 +76,24 @@ namespace aoc.csharp._2017
             return checksum;
         }
 
-        public static int CalcPart2(string input)
+        public static int CalcPart2(int[][] input)
         {
-            string[] lines = input.Split('\n');
             int checksum = 0;
-            foreach (string line in lines)
+            for (int row = 0; row < input.Length; row++)
             {
-                string[] cells = line.Split('\t');
-                List<int> values = cells.Select(c => int.Parse(c)).ToList();
-                int count = values.Count;
-                for (int i = 0; i < count; i++)
+                int[] line = input[row];
+                for (int i = 0; i < line.Length; i++)
                 {
-                    for (int j = 0; j < count; j++)
+                    for (int j = 0; j < line.Length; j++)
                     {
                         if (i == j)
                         {
                             continue;
                         }
 
-                        if ((values[i] % values[j]) == 0)
+                        if ((line[i] % line[j]) == 0)
                         {
-                            checksum += values[i] / values[j];
+                            checksum += line[i] / line[j];
                         }
                     }
                 }

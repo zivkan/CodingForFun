@@ -12,7 +12,7 @@ namespace aoc.csharp._2015
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var text = input.ReadToEnd();
+            var text = input.ReadLine();
             var part1 = Next(text);
             var part2 = Next(part1);
 

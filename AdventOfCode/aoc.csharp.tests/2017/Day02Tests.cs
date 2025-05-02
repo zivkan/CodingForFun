@@ -19,7 +19,12 @@ namespace aoc.csharp.tests._2017
         [Fact]
         public void Part1Sample()
         {
-            string input = "5\t1\t9\t5\n7\t5\t3\n2\t4\t6\t8";
+            int[][] input = 
+                [ 
+                    [5, 1, 9, 5],
+                    [7, 5, 3],
+                    [2, 4, 6, 8]
+                ];
             int actual = Day02.CalcPart1(input);
             Assert.Equal(18, actual);
         }
@@ -27,7 +32,12 @@ namespace aoc.csharp.tests._2017
         [Fact]
         public void Part2Sample()
         {
-            string input = "5\t9\t2\t8\n9\t4\t7\t3\n3\t8\t6\t5";
+            int[][] input =
+                [
+                    [ 5, 9, 2, 8 ],
+                    [ 9, 4, 7, 3 ],
+                    [ 3, 8, 6, 5 ]
+                ];
             int checksum = Day02.CalcPart2(input);
             Assert.Equal(9, checksum);
         }

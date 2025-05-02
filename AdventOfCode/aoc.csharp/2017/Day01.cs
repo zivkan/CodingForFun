@@ -12,7 +12,7 @@ namespace aoc.csharp._2017
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var text = input.ReadToEnd();
+            var text = input.ReadLine();
             var part1 = SolveCaptcha(text, Next);
             var part2 = SolveCaptcha(text, Opposite);
             return (part1.ToString(), part2.ToString());

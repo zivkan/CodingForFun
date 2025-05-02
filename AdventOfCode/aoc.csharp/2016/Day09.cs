@@ -13,7 +13,7 @@ namespace aoc.csharp._2016
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            string text = input.ReadToEnd();
+            string text = input.ReadLine();
             int part1 = CalculateLength(text);
             long part2 = CalculateLengthRecursive(text);
 

@@ -13,7 +13,7 @@ namespace aoc.csharp._2015
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var key = input.ReadToEnd();
+            var key = input.ReadLine();
             var part1 = FindLowestWithFiveZeros(key).ToString();
             var part2 = FindLowestWithSixZeros(key).ToString();
             return (part1, part2);

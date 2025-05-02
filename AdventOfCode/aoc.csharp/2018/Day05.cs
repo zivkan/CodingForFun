@@ -12,7 +12,7 @@ namespace aoc.csharp._2018
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var text = input.ReadToEnd();
+            var text = input.ReadLine();
             var part1 = React(text);
             var part2 = BestReaction(text);
             return (part1.Length.ToString(), part2.Length.ToString());

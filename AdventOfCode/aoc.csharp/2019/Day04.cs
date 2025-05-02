@@ -12,7 +12,7 @@ namespace aoc.csharp._2019
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var text = input.ReadToEnd();
+            var text = input.ReadLine();
             var seperator = text.IndexOf('-');
             var current = text.AsSpan(0, seperator).ToArray();
             var max = text.AsSpan(seperator + 1);

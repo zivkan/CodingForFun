@@ -18,7 +18,7 @@ namespace aoc.csharp._2016
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var doorId = input.ReadToEnd();
+            var doorId = input.ReadLine();
 
             var part1 = GetPart1Code(doorId);
             var part2 = GetPart2Code(doorId);

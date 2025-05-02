@@ -75,7 +75,8 @@ namespace aoc.csharp._2019
             do
             {
                 buffer = new char[width * height];
-                if (input.Read(buffer, 0, buffer.Length) == 0)
+                int read;
+                if ((read = input.Read(buffer, 0, buffer.Length)) < buffer.Length)
                 {
                     buffer = null;
                 }

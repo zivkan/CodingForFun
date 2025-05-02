@@ -13,7 +13,7 @@ namespace aoc.csharp._2017
 
         public static (string Part1, string Part2) GetAnswer(TextReader input)
         {
-            var text = input.ReadToEnd();
+            var text = input.ReadLine();
             var used = GetUsed(text);
             var part1 = used.Count;
             var groups = Group(used);
