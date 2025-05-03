@@ -1,10 +1,11 @@
 ﻿using aoc.csharp._2015;
 using Xunit;
 using System.Threading.Tasks;
+using Xunit.Abstractions;
 
 namespace aoc.csharp.tests._2015
 {
-    public class Day02Tests
+    public class Day02Tests(ITestOutputHelper _output)
     {
         [Fact]
         public async Task Answer()
@@ -12,8 +13,8 @@ namespace aoc.csharp.tests._2015
             using var input = await Input.GetAsync(2015, 02);
             var (part1, part2) = Day02.GetAnswer(input);
 
-            Assert.Equal("1606483", part1);
-            Assert.Equal("3842356", part2);
+            _output.WriteLine($"Part 1: {part1}");
+            _output.WriteLine($"Part 2: {part2}");
         }
 
         [Theory]

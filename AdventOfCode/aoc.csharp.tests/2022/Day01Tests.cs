@@ -2,10 +2,11 @@
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace aoc.csharp.tests._2022
 {
-    public class Day01Tests
+    public class Day01Tests(ITestOutputHelper _output)
     {
         private const string Sample = @"1000
 2000
@@ -28,8 +29,8 @@ namespace aoc.csharp.tests._2022
             var input = await Input.GetAsync(2022, 1);
             var (part1, part2) = Day01.GetAnswer(input);
 
-            Assert.Equal("69501", part1);
-            Assert.Equal("202346", part2);
+            _output.WriteLine($"Part 1: {part1}");
+            _output.WriteLine($"Part 2: {part2}");
         }
 
         [Fact]

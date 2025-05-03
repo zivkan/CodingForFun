@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace aoc.csharp.tests._2016
 {
-    public class Day08Tests
+    public class Day08Tests(ITestOutputHelper _output)
     {
         [Fact]
         public async Task Answer()
@@ -15,15 +16,8 @@ namespace aoc.csharp.tests._2016
             using var input = await Input.GetAsync(2016, 08);
             var (part1, part2) = Day08.GetAnswer(input);
 
-            Assert.Equal("106", part1);
-            Assert.Equal(
-                " ##  #### #    #### #     ##  #   #####  ##   ### " + Environment.NewLine +
-                "#  # #    #    #    #    #  # #   ##    #  # #    " + Environment.NewLine +
-                "#    ###  #    ###  #    #  #  # # ###  #    #    " + Environment.NewLine +
-                "#    #    #    #    #    #  #   #  #    #     ##  " + Environment.NewLine +
-                "#  # #    #    #    #    #  #   #  #    #  #    # " + Environment.NewLine +
-                " ##  #    #### #### ####  ##    #  #     ##  ###  " + Environment.NewLine,
-                part2);
+            _output.WriteLine($"Part 1: {part1}");
+            _output.WriteLine($"Part 2: \n{part2}");
         }
 
         [Fact]

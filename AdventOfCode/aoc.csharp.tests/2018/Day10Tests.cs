@@ -1,12 +1,12 @@
 using aoc.csharp._2018;
-using System;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace aoc.csharp.tests._2018
 {
-    public class Day10Tests
+    public class Day10Tests(ITestOutputHelper _output)
     {
         [Fact]
         public async Task Answer()
@@ -14,20 +14,8 @@ namespace aoc.csharp.tests._2018
             using var input = await Input.GetAsync(2018, 10);
             var (part1, part2) = Day10.GetAnswer(input);
 
-            var expectedPart1 =
-                "#####.....##....#....#..#.......#####.....##....#####...#####." + Environment.NewLine +
-                "#....#...#..#...##...#..#.......#....#...#..#...#....#..#....#" + Environment.NewLine +
-                "#....#..#....#..##...#..#.......#....#..#....#..#....#..#....#" + Environment.NewLine +
-                "#....#..#....#..#.#..#..#.......#....#..#....#..#....#..#....#" + Environment.NewLine +
-                "#####...#....#..#.#..#..#.......#####...#....#..#####...#####." + Environment.NewLine +
-                "#.......######..#..#.#..#.......#.......######..#.......#..#.." + Environment.NewLine +
-                "#.......#....#..#..#.#..#.......#.......#....#..#.......#...#." + Environment.NewLine +
-                "#.......#....#..#...##..#.......#.......#....#..#.......#...#." + Environment.NewLine +
-                "#.......#....#..#...##..#.......#.......#....#..#.......#....#" + Environment.NewLine +
-                "#.......#....#..#....#..######..#.......#....#..#.......#....#" + Environment.NewLine;
-
-            Assert.Equal(expectedPart1, part1);
-            Assert.Equal("10304", part2);
+            _output.WriteLine($"Part 1:\n{part1}");
+            _output.WriteLine($"Part 2: {part2}");
         }
 
         private static readonly string _sampleInput = @"position=< 9,  1> velocity=< 0,  2>

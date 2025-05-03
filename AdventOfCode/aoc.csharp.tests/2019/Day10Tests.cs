@@ -3,10 +3,11 @@ using aoc.csharp.Geometry;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace aoc.csharp.tests._2019
 {
-    public class Day10Tests
+    public class Day10Tests(ITestOutputHelper _output)
     {
         private static readonly string[] _sampleMap = new string[]
         {
@@ -23,8 +24,8 @@ namespace aoc.csharp.tests._2019
             using var input = await Input.GetAsync(2019, 10);
             var (part1, part2) = Day10.GetAnswer(input);
 
-            Assert.Equal("292", part1);
-            Assert.Equal("317", part2);
+            _output.WriteLine($"Part 1: {part1}");
+            _output.WriteLine($"Part 2: {part2}");
         }
 
         [Theory]

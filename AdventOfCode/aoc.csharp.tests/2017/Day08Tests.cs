@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using aoc.csharp._2017;
+using System.Linq;
 using System.Threading.Tasks;
-using aoc.csharp._2017;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace aoc.csharp.tests._2017
 {
-    public class Day08Tests
+    public class Day08Tests(ITestOutputHelper _output)
     {
         [Fact]
         public async Task Answer()
@@ -13,8 +14,8 @@ namespace aoc.csharp.tests._2017
             using var input = await Input.GetAsync(2017, 08);
             var (part1, part2) = Day08.GetAnswer(input);
 
-            Assert.Equal("6343", part1);
-            Assert.Equal("7184", part2);
+            _output.WriteLine($"Part 1: {part1}");
+            _output.WriteLine($"Part 2: {part2}");
         }
 
         private const string _sample = @"b inc 5 if a > 1

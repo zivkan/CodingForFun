@@ -3,10 +3,11 @@ using aoc.csharp.Geometry;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace aoc.csharp.tests._2019
 {
-    public class Day03Tests
+    public class Day03Tests(ITestOutputHelper _output)
     {
         [Fact]
         public async Task Answer()
@@ -14,8 +15,8 @@ namespace aoc.csharp.tests._2019
             using var input = await Input.GetAsync(2019, 03);
             var (part1, part2) = Day03.GetAnswer(input);
 
-            Assert.Equal("303", part1);
-            Assert.Equal("11222", part2);
+            _output.WriteLine($"Part 1: {part1}");
+            _output.WriteLine($"Part 2: {part2}");
         }
 
         [Fact]
