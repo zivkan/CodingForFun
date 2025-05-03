@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace aoc.csharp.tests._2018
+namespace aoc.csharp.tests._2018;
+
+public class Day12Tests(ITestOutputHelper _output)
 {
-    public class Day12Tests(ITestOutputHelper _output)
+    [Fact]
+    public async Task Answer()
     {
-        [Fact]
-        public async Task Answer()
-        {
-            using var input = await Input.GetAsync(2018, 12);
-            var (part1, part2) = Day12.GetAnswer(input);
+        using var input = await Input.GetAsync(2018, 12);
+        var (part1, part2) = Day12.GetAnswer(input);
 
-            _output.WriteLine($"Part 1: {part1}");
-            _output.WriteLine($"Part 2: {part2}");
-        }
+        _output.WriteLine($"Part 1: {part1}");
+        _output.WriteLine($"Part 2: {part2}");
+    }
 
-        [Fact]
-        public void Part1Sample()
-        {
-            const string input = @"initial state: #..#.#..##......###...###
+    [Fact]
+    public void Part1Sample()
+    {
+        const string input = @"initial state: #..#.#..##......###...###
 
 ...## => #
 ..#.. => #
@@ -39,50 +39,49 @@ namespace aoc.csharp.tests._2018
 ###.. => #
 ###.# => #
 ####. => #";
-            bool[] mapping;
-            IReadOnlyList<int> initialState;
-            using (var reader = new StringReader(input))
-            {
-                (mapping, initialState) = Day12.ParseInput(reader);
-            }
-
-            var expected = new[]
-            {
-                " 0: ...#..#.#..##......###...###...........",
-                " 1: ...#...#....#.....#..#..#..#...........",
-                " 2: ...##..##...##....#..#..#..##..........",
-                " 3: ..#.#...#..#.#....#..#..#...#..........",
-                " 4: ...#.#..#...#.#...#..#..##..##.........",
-                " 5: ....#...##...#.#..#..#...#...#.........",
-                " 6: ....##.#.#....#...#..##..##..##........",
-                " 7: ...#..###.#...##..#...#...#...#........",
-                " 8: ...#....##.#.#.#..##..##..##..##.......",
-                " 9: ...##..#..#####....#...#...#...#.......",
-                "10: ..#.#..#...#.##....##..##..##..##......",
-                "11: ...#...##...#.#...#.#...#...#...#......",
-                "12: ...##.#.#....#.#...#.#..##..##..##.....",
-                "13: ..#..###.#....#.#...#....#...#...#.....",
-                "14: ..#....##.#....#.#..##...##..##..##....",
-                "15: ..##..#..#.#....#....#..#.#...#...#....",
-                "16: .#.#..#...#.#...##...#...#.#..##..##...",
-                "17: ..#...##...#.#.#.#...##...#....#...#...",
-                "18: ..##.#.#....#####.#.#.#...##...##..##..",
-                "19: .#..###.#..#.#.#######.#.#.#..#.#...#..",
-                "20: .#....##....#####...#######....#.#..##."
-            };
-
-            var pots = initialState.ToList();
-            var str = " 0: " + Day12.ToString(pots, -3, 35);
-            Assert.Equal(expected[0], str);
-            for (int generation = 1; generation <= 20; generation++)
-            {
-                pots = Day12.NextGeneration(pots, mapping);
-                str = generation.ToString().PadLeft(2) + ": " + Day12.ToString(pots, -3, 35);
-                Assert.Equal(expected[generation], str);
-            }
-
-            Assert.Equal(-2, pots.Min());
-            Assert.Equal(325, pots.Sum());
+        bool[] mapping;
+        IReadOnlyList<int> initialState;
+        using (var reader = new StringReader(input))
+        {
+            (mapping, initialState) = Day12.ParseInput(reader);
         }
+
+        var expected = new[]
+        {
+            " 0: ...#..#.#..##......###...###...........",
+            " 1: ...#...#....#.....#..#..#..#...........",
+            " 2: ...##..##...##....#..#..#..##..........",
+            " 3: ..#.#...#..#.#....#..#..#...#..........",
+            " 4: ...#.#..#...#.#...#..#..##..##.........",
+            " 5: ....#...##...#.#..#..#...#...#.........",
+            " 6: ....##.#.#....#...#..##..##..##........",
+            " 7: ...#..###.#...##..#...#...#...#........",
+            " 8: ...#....##.#.#.#..##..##..##..##.......",
+            " 9: ...##..#..#####....#...#...#...#.......",
+            "10: ..#.#..#...#.##....##..##..##..##......",
+            "11: ...#...##...#.#...#.#...#...#...#......",
+            "12: ...##.#.#....#.#...#.#..##..##..##.....",
+            "13: ..#..###.#....#.#...#....#...#...#.....",
+            "14: ..#....##.#....#.#..##...##..##..##....",
+            "15: ..##..#..#.#....#....#..#.#...#...#....",
+            "16: .#.#..#...#.#...##...#...#.#..##..##...",
+            "17: ..#...##...#.#.#.#...##...#....#...#...",
+            "18: ..##.#.#....#####.#.#.#...##...##..##..",
+            "19: .#..###.#..#.#.#######.#.#.#..#.#...#..",
+            "20: .#....##....#####...#######....#.#..##."
+        };
+
+        var pots = initialState.ToList();
+        var str = " 0: " + Day12.ToString(pots, -3, 35);
+        Assert.Equal(expected[0], str);
+        for (int generation = 1; generation <= 20; generation++)
+        {
+            pots = Day12.NextGeneration(pots, mapping);
+            str = generation.ToString().PadLeft(2) + ": " + Day12.ToString(pots, -3, 35);
+            Assert.Equal(expected[generation], str);
+        }
+
+        Assert.Equal(-2, pots.Min());
+        Assert.Equal(325, pots.Sum());
     }
 }

@@ -5,67 +5,67 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace aoc.csharp.tests._2019
+namespace aoc.csharp.tests._2019;
+
+public class Day14Tests(ITestOutputHelper _output)
 {
-    public class Day14Tests(ITestOutputHelper _output)
+    [Fact]
+    public async Task Answer()
     {
-        [Fact]
-        public async Task Answer()
-        {
-            using var input = await Input.GetAsync(2019, 14);
-            var (part1, part2) = Day14.GetAnswer(input);
+        using var input = await Input.GetAsync(2019, 14);
+        var (part1, part2) = Day14.GetAnswer(input);
 
-            _output.WriteLine($"Part 1: {part1}");
-            _output.WriteLine($"Part 2: {part2}");
+        _output.WriteLine($"Part 1: {part1}");
+        _output.WriteLine($"Part 2: {part2}");
+    }
+
+    [Fact]
+    public void Sample1()
+    {
+        var input =
+            "9 ORE => 2 A" + Environment.NewLine +
+            "8 ORE => 3 B" + Environment.NewLine +
+            "7 ORE => 5 C" + Environment.NewLine +
+            "3 A, 4 B => 1 AB" + Environment.NewLine +
+            "5 B, 7 C => 1 BC" + Environment.NewLine +
+            "4 C, 1 A => 1 CA" + Environment.NewLine +
+            "2 AB, 3 BC, 4 CA => 1 FUEL";
+        string part1;
+        using (var reader = new StringReader(input))
+        {
+            (part1, _) = Day14.GetAnswer(reader);
         }
 
-        [Fact]
-        public void Sample1()
-        {
-            var input =
-                "9 ORE => 2 A" + Environment.NewLine +
-                "8 ORE => 3 B" + Environment.NewLine +
-                "7 ORE => 5 C" + Environment.NewLine +
-                "3 A, 4 B => 1 AB" + Environment.NewLine +
-                "5 B, 7 C => 1 BC" + Environment.NewLine +
-                "4 C, 1 A => 1 CA" + Environment.NewLine +
-                "2 AB, 3 BC, 4 CA => 1 FUEL";
-            string part1;
-            using (var reader = new StringReader(input))
-            {
-                (part1, _) = Day14.GetAnswer(reader);
-            }
+        Assert.Equal("165", part1);
+    }
 
-            Assert.Equal("165", part1);
+    [Fact]
+    public void Sample2()
+    {
+        var input =
+            "157 ORE => 5 NZVS" + Environment.NewLine +
+            "165 ORE => 6 DCFZ" + Environment.NewLine +
+            "44 XJWVT, 5 KHKGT, 1 QDVJ, 29 NZVS, 9 GPVTF, 48 HKGWZ => 1 FUEL" + Environment.NewLine +
+            "12 HKGWZ, 1 GPVTF, 8 PSHF => 9 QDVJ" + Environment.NewLine +
+            "179 ORE => 7 PSHF" + Environment.NewLine +
+            "177 ORE => 5 HKGWZ" + Environment.NewLine +
+            "7 DCFZ, 7 PSHF => 2 XJWVT" + Environment.NewLine +
+            "165 ORE => 2 GPVTF" + Environment.NewLine +
+            "3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF => 8 KHKGT";
+        string part1, part2;
+        using (var reader = new StringReader(input))
+        {
+            (part1, part2) = Day14.GetAnswer(reader);
         }
 
-        [Fact]
-        public void Sample2()
-        {
-            var input =
-                "157 ORE => 5 NZVS" + Environment.NewLine +
-                "165 ORE => 6 DCFZ" + Environment.NewLine +
-                "44 XJWVT, 5 KHKGT, 1 QDVJ, 29 NZVS, 9 GPVTF, 48 HKGWZ => 1 FUEL" + Environment.NewLine +
-                "12 HKGWZ, 1 GPVTF, 8 PSHF => 9 QDVJ" + Environment.NewLine +
-                "179 ORE => 7 PSHF" + Environment.NewLine +
-                "177 ORE => 5 HKGWZ" + Environment.NewLine +
-                "7 DCFZ, 7 PSHF => 2 XJWVT" + Environment.NewLine +
-                "165 ORE => 2 GPVTF" + Environment.NewLine +
-                "3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF => 8 KHKGT";
-            string part1, part2;
-            using (var reader = new StringReader(input))
-            {
-                (part1, part2) = Day14.GetAnswer(reader);
-            }
+        Assert.Equal("13312", part1);
+        Assert.Equal("82892753", part2);
+    }
 
-            Assert.Equal("13312", part1);
-            Assert.Equal("82892753", part2);
-        }
-
-        [Fact]
-        public void Sample3()
-        {
-            var input = @"2 VPVL, 7 FWMGM, 2 CXFTF, 11 MNCFX => 1 STKFG
+    [Fact]
+    public void Sample3()
+    {
+        var input = @"2 VPVL, 7 FWMGM, 2 CXFTF, 11 MNCFX => 1 STKFG
 17 NVRVD, 3 JNWZP => 8 VPVL
 53 STKFG, 6 MNCFX, 46 VJHF, 81 HVMC, 68 CXFTF, 25 GNMV => 1 FUEL
 22 VJHF, 37 MNCFX => 5 FWMGM
@@ -77,20 +77,20 @@ namespace aoc.csharp.tests._2019
 1 NVRVD => 8 CXFTF
 1 VJHF, 6 MNCFX => 4 RFSQX
 176 ORE => 6 VJHF";
-            string part1, part2;
-            using (var reader = new StringReader(input))
-            {
-                (part1, part2) = Day14.GetAnswer(reader);
-            }
-
-            Assert.Equal("180697", part1);
-            Assert.Equal("5586022", part2);
+        string part1, part2;
+        using (var reader = new StringReader(input))
+        {
+            (part1, part2) = Day14.GetAnswer(reader);
         }
 
-        [Fact]
-        public void Sample4()
-        {
-            var input = @"171 ORE => 8 CNZTR
+        Assert.Equal("180697", part1);
+        Assert.Equal("5586022", part2);
+    }
+
+    [Fact]
+    public void Sample4()
+    {
+        var input = @"171 ORE => 8 CNZTR
 7 ZLQW, 3 BMBT, 9 XCVML, 26 XMNCP, 1 WPTQ, 2 MZWV, 1 RJRHP => 4 PLWSL
 114 ORE => 4 BHXH
 14 VRPVC => 6 BMBT
@@ -107,14 +107,13 @@ namespace aoc.csharp.tests._2019
 121 ORE => 7 VRPVC
 7 XCVML => 6 RJRHP
 5 BHXH, 4 VRPVC => 5 LTCX";
-            string part1, part2;
-            using (var reader = new StringReader(input))
-            {
-                (part1, part2) = Day14.GetAnswer(reader);
-            }
-
-            Assert.Equal("2210736", part1);
-            Assert.Equal("460664", part2);
+        string part1, part2;
+        using (var reader = new StringReader(input))
+        {
+            (part1, part2) = Day14.GetAnswer(reader);
         }
+
+        Assert.Equal("2210736", part1);
+        Assert.Equal("460664", part2);
     }
 }

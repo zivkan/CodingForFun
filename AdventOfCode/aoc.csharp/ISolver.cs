@@ -1,9 +1,8 @@
 ﻿using System.IO;
 
-namespace aoc.csharp
+namespace aoc.csharp;
+
+interface ISolver
 {
-    interface ISolver
-    {
-        (string Part1, string Part2) GetSolution(TextReader input);
-    }
+    (string Part1, string Part2) GetSolution(TextReader input);
 }

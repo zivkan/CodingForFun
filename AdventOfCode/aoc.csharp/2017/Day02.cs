@@ -1,105 +1,104 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace aoc.csharp._2017
+namespace aoc.csharp._2017;
+
+public class Day02 : ISolver
 {
-    public class Day02 : ISolver
+    public (string Part1, string Part2) GetSolution(TextReader input)
     {
-        public (string Part1, string Part2) GetSolution(TextReader input)
+        return GetAnswer(input);
+    }
+
+    public static (string Part1, string Part2) GetAnswer(TextReader input)
+    {
+        var text = input.ReadToEnd();
+
+        var line = new List<int>();
+        var lines = new List<int[]>();
+        int current = 0;
+
+        for (int i = 0; i < text.Length; i++)
         {
-            return GetAnswer(input);
+            if (text[i] == '\n' || text[i] == '\r')
+            {
+                if (text[i] == '\r' && i + 1 < text.Length && text[i + 1] == '\n')
+                {
+                    i++;
+                }
+                line.Add(current);
+                current = 0;
+                lines.Add(line.ToArray());
+                line.Clear();
+            }
+            else if (text[i] == '\t')
+            {
+                line.Add(current);
+                current = 0;
+            }
+            else
+            {
+                current = current * 10 + (text[i] - '0');
+            }
         }
 
-        public static (string Part1, string Part2) GetAnswer(TextReader input)
+        var data = lines.ToArray();
+
+        int part1 = CalcPart1(data);
+        int part2 = CalcPart2(data);
+        return (part1.ToString(), part2.ToString());
+    }
+
+    public static int CalcPart1(int[][] input)
+    {
+        int checksum = 0;
+        for (int row = 0; row < input.Length; row++)
         {
-            var text = input.ReadToEnd();
-
-            var line = new List<int>();
-            var lines = new List<int[]>();
-            int current = 0;
-
-            for (int i = 0; i < text.Length; i++)
+            int[] line = input[row];
+            int min = line[0];
+            int max = min;
+            for (int col = 1; col < line.Length; col++)
             {
-                if (text[i] == '\n' || text[i] == '\r')
+                int num = line[col];
+                if (num > max)
                 {
-                    if (text[i] == '\r' && i + 1 < text.Length && text[i + 1] == '\n')
-                    {
-                        i++;
-                    }
-                    line.Add(current);
-                    current = 0;
-                    lines.Add(line.ToArray());
-                    line.Clear();
+                    max = num;
                 }
-                else if (text[i] == '\t')
+                if (num < min)
                 {
-                    line.Add(current);
-                    current = 0;
-                }
-                else
-                {
-                    current = current * 10 + (text[i] - '0');
+                    min = num;
                 }
             }
 
-            var data = lines.ToArray();
-
-            int part1 = CalcPart1(data);
-            int part2 = CalcPart2(data);
-            return (part1.ToString(), part2.ToString());
+            checksum += max - min;
         }
 
-        public static int CalcPart1(int[][] input)
+        return checksum;
+    }
+
+    public static int CalcPart2(int[][] input)
+    {
+        int checksum = 0;
+        for (int row = 0; row < input.Length; row++)
         {
-            int checksum = 0;
-            for (int row = 0; row < input.Length; row++)
+            int[] line = input[row];
+            for (int i = 0; i < line.Length; i++)
             {
-                int[] line = input[row];
-                int min = line[0];
-                int max = min;
-                for (int col = 1; col < line.Length; col++)
+                for (int j = 0; j < line.Length; j++)
                 {
-                    int num = line[col];
-                    if (num > max)
+                    if (i == j)
                     {
-                        max = num;
+                        continue;
                     }
-                    if (num < min)
+
+                    if ((line[i] % line[j]) == 0)
                     {
-                        min = num;
-                    }
-                }
-
-                checksum += max - min;
-            }
-
-            return checksum;
-        }
-
-        public static int CalcPart2(int[][] input)
-        {
-            int checksum = 0;
-            for (int row = 0; row < input.Length; row++)
-            {
-                int[] line = input[row];
-                for (int i = 0; i < line.Length; i++)
-                {
-                    for (int j = 0; j < line.Length; j++)
-                    {
-                        if (i == j)
-                        {
-                            continue;
-                        }
-
-                        if ((line[i] % line[j]) == 0)
-                        {
-                            checksum += line[i] / line[j];
-                        }
+                        checksum += line[i] / line[j];
                     }
                 }
             }
-
-            return checksum;
         }
+
+        return checksum;
     }
 }
